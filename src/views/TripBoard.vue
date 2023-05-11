@@ -19,5 +19,6 @@ export default {
 <style scoped lang="scss">
 .board-container {
   padding-top: 100px;
+  display: flex;
 }
 </style>
