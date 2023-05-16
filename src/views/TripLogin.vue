@@ -3,8 +3,18 @@
     <div class="login-container">
       <div class="title">로그인</div>
       <form class="content">
-        <input type="input" class="id box" placeholder="아이디" />
-        <input type="input" class="pw box" placeholder="비밀번호" />
+        <input
+          type="input"
+          class="id box"
+          v-model="user.id"
+          placeholder="아이디"
+        />
+        <input
+          type="input"
+          class="pw box"
+          v-model="user.password"
+          placeholder="비밀번호"
+        />
         <div class="auto">
           <input type="checkbox" id="auto-login" />
           <label for="auto-login">로그인 상태 유지</label>
@@ -18,18 +28,24 @@
 </template>
 
 <script>
+import http from '../utils/http';
 export default {
   name: 'TripLogin',
   components: {},
   data() {
     return {
-      message: '',
+      user: {
+        id: '',
+        password: '',
+      },
     };
   },
   created() {},
   methods: {
     onClickLoginButton() {
-      alert('로그인 버튼 클릭!');
+      http.post('/user/login', this.user).then((data) => {
+        console.log(data);
+      });
     },
   },
 };

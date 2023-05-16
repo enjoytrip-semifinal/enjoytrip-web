@@ -91,9 +91,18 @@ export default {
   created() {},
   methods: {
     onClickSignUp() {
-      http.post('/user/join').then(() => {
-        this.$router.push('/');
-      });
+      http
+        .post('/user/join', this.user)
+        .then(() => {
+          this.$router.push('/');
+          alert('회원가입이 완료되었습니다. 즐거운 여행되세요!!');
+        })
+        .catch(function (error) {
+          if (error.response) {
+            // 요청이 이루어졌으며 서버가 2xx의 범위를 벗어나는 상태 코드로 응답했습니다.
+            alert('회원가입에 실패했습니다.');
+          }
+        });
       // console.log(
       //   `${this.id} ${this.password} ${this.passwordCheck} ${this.nickname} ${this.email}`
       // );
