@@ -7,7 +7,7 @@
   >
     <img
       class="logo"
-      src="@/assets/images/로고.png"
+      src="@/assets/images/logo.png"
       @click="onClickLogo"
       alt="logo"
     />
@@ -65,7 +65,7 @@ export default {
   },
   methods: {
     handleScroll() {
-      if (this.scrollPosition < screen.height - screen.height * 0.1) {
+      if (this.scrollPosition < screen.height - screen.height * 0.2) {
         this.isTop = true;
       } else {
         this.isTop = false;
