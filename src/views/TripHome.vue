@@ -1,7 +1,7 @@
 <template>
   <main class="home-container">
     <section class="section-1">
-      <img class="main-img" src="../assets/images/MainPlace.png" alt="" />
+      <img class="main-img" src="@/assets/images/MainPlace.png" alt="" />
       <div class="main-back"></div>
       <div class="motto-container">
         {{

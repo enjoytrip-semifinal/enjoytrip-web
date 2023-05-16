@@ -28,13 +28,13 @@
         <router-link to="/place"
           ><li @click="onClickHotPlace">핫플레이스</li></router-link
         >
-        <router-link to="plan"
+        <router-link to="/plan"
           ><li @click="onClickPlan">여행 계획</li></router-link
         >
-        <router-link to="login"
+        <router-link to="/login"
           ><li @click="onClickLogin">로그인</li></router-link
         >
-        <router-link to="signup"
+        <router-link to="/signup"
           ><li @click="onClickSingUp">회원가입</li></router-link
         >
       </ul>
@@ -54,6 +54,10 @@ export default {
     };
   },
   created() {
+    if (this.$route.fullPath !== '/') {
+      this.isHome = false;
+    }
+    console.log(this.$route.fullPath);
     window.addEventListener('scroll', this.handleScroll);
   },
   destroyed() {
@@ -108,7 +112,7 @@ export default {
   display: flex;
   justify-content: space-between;
   height: 100px;
-  z-index: 1;
+  z-index: 999;
   background-color: white;
   opacity: 0.95;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
@@ -142,7 +146,7 @@ export default {
   a {
     color: white;
   }
-  a.router-link-exact-active {
+  a.router-link-active {
     color: red;
     line-height: 40px;
     border-bottom: 2px red solid;
@@ -155,7 +159,7 @@ export default {
   a {
     color: black;
   }
-  a.router-link-exact-active {
+  a.router-link-active {
     color: red;
     /* line-height: 40px; */
     border-bottom: 2px red solid;
