@@ -12,6 +12,7 @@
                 type="text"
                 class="id box"
                 id="id"
+                v-model="user.id"
                 placeholder="아이디를 입력해주세요."
               />
               <div class>
@@ -25,6 +26,7 @@
               type="password"
               class="pw box"
               id="pw"
+              v-model="user.password"
               placeholder="비밀번호를 입력해주세요."
             />
           </div>
@@ -36,6 +38,7 @@
               type="password"
               class="pw-verify box"
               id="pw-verify"
+              v-model="passwordCheck"
               placeholder="비밀번호를 다시 입력해주세요."
             />
           </div>
@@ -45,6 +48,7 @@
               type="text"
               class="nickname box"
               id="nickname"
+              v-model="user.nickname"
               placeholder="닉네임을 입력해주세요."
             />
           </div>
@@ -54,27 +58,47 @@
               type="email"
               class="email box"
               id="email"
+              v-model="user.email"
               placeholder="이메일을 입력해주세요."
             />
           </div>
         </div>
-        <button class="signup-button" @click.prevent="">가입하기</button>
+        <button class="signup-button" @click.prevent="onClickSignUp">
+          가입하기
+        </button>
       </form>
     </div>
   </div>
 </template>
 
 <script>
+import http from '@/utils/http';
+
 export default {
   name: 'TripSignUp',
   components: {},
   data() {
     return {
-      message: '',
+      user: {
+        id: '',
+        password: '',
+        nickname: '',
+        email: '',
+      },
+      passwordCheck: '',
     };
   },
   created() {},
-  methods: {},
+  methods: {
+    onClickSignUp() {
+      http.post('/user/join').then(() => {
+        this.$router.push('/');
+      });
+      // console.log(
+      //   `${this.id} ${this.password} ${this.passwordCheck} ${this.nickname} ${this.email}`
+      // );
+    },
+  },
 };
 </script>
 
@@ -146,6 +170,9 @@ export default {
             height: 48px;
             border: 1px solid #d1d1d1;
             border-radius: 4px;
+            font-size: 16px;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-weight: 500;
           }
         }
       }
@@ -162,6 +189,7 @@ export default {
       font-weight: 500;
       margin-bottom: 32px;
       cursor: pointer;
+      font-family: 'Noto Sans KR', sans-serif;
     }
   }
 }
