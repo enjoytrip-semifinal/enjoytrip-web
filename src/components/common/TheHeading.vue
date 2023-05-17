@@ -31,18 +31,26 @@
         <router-link to="/plan"
           ><li @click="onClickPlan">여행 계획</li></router-link
         >
-        <router-link to="/login"
+        <router-link to="/login" v-if="!isLogin"
           ><li @click="onClickLogin">로그인</li></router-link
         >
-        <router-link to="/signup"
+        <router-link to="/signup" v-if="!isLogin"
           ><li @click="onClickSingUp">회원가입</li></router-link
         >
+        <router-link to="/login" v-if="isLogin"
+          ><li @click="onClickLogin">마이페이지</li></router-link
+        >
+        <li v-if="isLogin" @click.prevent="onClickLogout">로그아웃</li>
       </ul>
     </nav>
   </div>
 </template>
 
 <script>
+import { mapActions, mapGetters, mapState } from 'vuex';
+
+const userStore = 'userStore';
+
 export default {
   name: 'TheHeading',
   components: {},
@@ -63,7 +71,12 @@ export default {
   destroyed() {
     window.removeEventListener('scroll', this.handleScroll);
   },
+  computed: {
+    ...mapState(userStore, ['isLogin', 'userInfo']),
+    ...mapGetters(['checkUserInfo']),
+  },
   methods: {
+    ...mapActions(userStore, ['userLogout']),
     handleScroll() {
       if (this.scrollPosition < screen.height - screen.height * 0.2) {
         this.isTop = true;
@@ -100,6 +113,18 @@ export default {
     onClickSingUp() {
       this.isHome = false;
     },
+    onLogoutButtonClick() {
+      localStorage.removeItem('user');
+    },
+    onClickLogout() {
+      console.log(this.userInfo.id);
+      this.userLogout(this.userInfo.id);
+      sessionStorage.removeItem('access-token');
+      sessionStorage.removeItem('refresh-token');
+      if (this.$route.path !== '/') {
+        this.$router.push('/');
+      }
+    },
   },
   watch: {},
 };
@@ -134,6 +159,7 @@ export default {
     margin-right: 41px;
     margin-top: 38px;
     transition-duration: 1s;
+    color: white;
   }
 }
 
@@ -157,6 +183,9 @@ export default {
   font-weight: 500;
   font-size: 20px;
   a {
+    color: black;
+  }
+  li {
     color: black;
   }
   a.router-link-active {

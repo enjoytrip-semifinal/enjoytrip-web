@@ -2,15 +2,15 @@
   <div class="login-root">
     <div class="login-container">
       <div class="title">로그인</div>
-      <form class="content">
+      <form class="login-form">
         <input
-          type="input"
+          type="text"
           class="id box"
           v-model="user.id"
           placeholder="아이디"
         />
         <input
-          type="input"
+          type="password"
           class="pw box"
           v-model="user.password"
           placeholder="비밀번호"
@@ -19,7 +19,7 @@
           <input type="checkbox" id="auto-login" />
           <label for="auto-login">로그인 상태 유지</label>
         </div>
-        <button class="login-button" v-on:click.prevent="onClickLoginButton">
+        <button class="login-button" @click.prevent="onClickLoginButton">
           로그인
         </button>
       </form>
@@ -28,7 +28,11 @@
 </template>
 
 <script>
-import http from '../utils/http';
+import { mapActions, mapState } from 'vuex';
+
+const userStore = 'userStore';
+
+// import { login } from '@/utils/user';
 export default {
   name: 'TripLogin',
   components: {},
@@ -41,11 +45,21 @@ export default {
     };
   },
   created() {},
+  computed: {
+    ...mapState(userStore, ['isLogin', 'isLoginError', 'userInfo']),
+  },
   methods: {
-    onClickLoginButton() {
-      http.post('/user/login', this.user).then((data) => {
-        console.log(data);
-      });
+    ...mapActions(userStore, ['userConfirm', 'getUserInfo']),
+    async onClickLoginButton() {
+      await this.userConfirm(this.user);
+      let token = sessionStorage.getItem('access-token');
+      if (this.isLogin) {
+        await this.getUserInfo(token);
+        this.$router.push('/');
+      }
+    },
+    moveSignUpPage() {
+      this.$router.push('/signup');
     },
   },
 };
@@ -69,7 +83,7 @@ export default {
       font-weight: 600;
     }
 
-    .content {
+    .login-form {
       display: flex;
       flex-direction: column;
       align-items: center;
