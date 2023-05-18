@@ -82,6 +82,24 @@
               </div>
             </div>
           </div>
+          <div class="address-section input-section">
+            <label for="address">주소<span class="require">*</span></label>
+            <div class="address-input-area">
+              <input
+                class="address-button"
+                type="button"
+                @click="onPostcode()"
+              />
+              <input
+                type="text"
+                v-model="user.address"
+                id="address"
+                placeholder="주소를 입력해주세요."
+              />
+            </div>
+          </div>
+
+          <!-- <LocationSearchVue /> -->
         </div>
         <button class="signup-button" type="submit">가입하기</button>
       </form>
@@ -91,9 +109,13 @@
 
 <script>
 import { signup } from '@/utils/user';
+// import LocationSearchVue from '../components/common/LocationSearch.vue';
+
 export default {
   name: 'TripSignUp',
-  components: {},
+  components: {
+    // LocationSearchVue,
+  },
   data() {
     return {
       user: {
@@ -101,6 +123,8 @@ export default {
         password: '',
         nickname: '',
         email: '',
+        address: '',
+        extraAddress: '',
       },
       passwordCheck: '',
       errorMsg: {
@@ -178,7 +202,8 @@ export default {
         this.state.isPassword &&
         this.state.isPasswordCheck &&
         this.state.isNickName &&
-        this.state.isEmail;
+        this.state.isEmail &&
+        this.user.address !== '';
       if (!err) {
         alert('회원가입에 실패했습니다.');
         return;
@@ -189,6 +214,47 @@ export default {
         () => alert('성공'),
         () => alert('실패')
       );
+    },
+    // 다음 주소 api
+    onPostcode() {
+      new window.daum.Postcode({
+        oncomplete: (data) => {
+          if (this.user.extraAddress !== '') {
+            this.user.extraAddress = '';
+          }
+          if (data.userSelectedType === 'R') {
+            // 사용자가 도로명 주소를 선택했을 경우
+            this.user.address = data.roadAddress;
+          } else {
+            // 사용자가 지번 주소를 선택했을 경우(J)
+            this.user.address = data.jibunAddress;
+          }
+
+          // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+          if (data.userSelectedType === 'R') {
+            // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+            // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+            if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+              this.user.extraAddress += data.bname;
+            }
+            // 건물명이 있고, 공동주택일 경우 추가한다.
+            if (data.buildingName !== '' && data.apartment === 'Y') {
+              this.user.extraAddress +=
+                this.user.extraAddress !== ''
+                  ? `, ${data.buildingName}`
+                  : data.buildingName;
+            }
+            // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+            if (this.user.extraAddress !== '') {
+              this.user.extraAddress = `(${this.user.extraAddress})`;
+            }
+          } else {
+            this.user.extraAddress = '';
+          }
+          // 우편번호를 입력한다.
+          this.postcode = data.zonecode;
+        },
+      }).open();
     },
   },
   watch: {
@@ -274,6 +340,29 @@ export default {
             font-size: 16px;
             font-family: 'Noto Sans KR', sans-serif;
             font-weight: 500;
+          }
+          .address-input-area {
+            width: 492px;
+            height: 48px;
+            border: 1px solid #d1d1d1;
+            border-radius: 4px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            .address-button {
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              opacity: 0;
+            }
+            #address {
+              z-index: -1;
+              padding-left: 12px;
+              font-size: 16px;
+              font-family: 'Noto Sans KR', sans-serif;
+              font-weight: 500;
+              width: 100%;
+            }
           }
         }
       }
