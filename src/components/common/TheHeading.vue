@@ -148,6 +148,7 @@ export default {
     height: 51px;
     margin-left: 41px;
     margin-top: 24px;
+    cursor: pointer;
   }
 
   .gnb {
@@ -188,9 +189,8 @@ export default {
   li {
     color: black;
   }
-  a.router-link-active {
+  .router-link-active li {
     color: red;
-    /* line-height: 40px; */
     border-bottom: 2px red solid;
   }
 }

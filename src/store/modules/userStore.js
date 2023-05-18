@@ -28,7 +28,6 @@ const userStore = {
       state.isValidToken = isValidToken;
     },
     SET_USER_INFO: (state, userInfo) => {
-      state.isLogin = true;
       state.userInfo = userInfo;
     },
   },
@@ -37,15 +36,18 @@ const userStore = {
       await login(
         user,
         ({ data }) => {
-          if (data.message === 'success') {
-            let accessToken = data['access-token'];
-            let refreshToken = data['refresh-token'];
+          console.log(data);
+          if (data.accessToken) {
+            console.log('성공!!!!');
+            let accessToken = data['accessToken'];
+            let refreshToken = data['refreshToken'];
             commit('SET_IS_LOGIN', true);
             commit('SET_IS_LOGIN_ERROR', false);
             commit('SET_IS_VALID_TOKEN', true);
             sessionStorage.setItem('access-token', accessToken);
             sessionStorage.setItem('refresh-token', refreshToken);
           } else {
+            console.log('실패!!');
             commit('SET_IS_LOGIN', false);
             commit('SET_IS_LOGIN_ERROR', true);
             commit('SET_IS_VALID_TOKEN', false);
@@ -59,8 +61,9 @@ const userStore = {
     async getUserInfo({ commit, dispatch }) {
       await findById(
         ({ data }) => {
-          if (data.message === 'success') {
-            commit('SET_USER_INFO', data.userInfo);
+          console.log(data);
+          if (data) {
+            commit('SET_USER_INFO', data);
           } else {
             console.log('유저 정보 없음!!!');
           }
@@ -82,8 +85,8 @@ const userStore = {
       );
       await this.tokenRegeneration(
         JSON.stringify(state.userInfo),
-        ({ data }) => {
-          if (data.message === 'success') {
+        ({ data, status }) => {
+          if (status === 200) {
             let accessToken = data['access-token'];
             console.log('재발급 완료 >> 새로운 토큰 : {}', accessToken);
             commit('SET_IS_VALID_TOKEN', true);
@@ -94,8 +97,8 @@ const userStore = {
           if (error.response.status === 401) {
             console.log('갱신 실패');
             // 다시 로그인 전 DB에 저장된 RefreshToken 제거.
-            await logout(({ data }) => {
-              if (data.message === 'success') {
+            await logout(({ status }) => {
+              if (status === 200) {
                 console.log('리프레시 토큰 제거 성공');
               } else {
                 console.log('리프레시 토큰 제거 실패');
@@ -117,8 +120,9 @@ const userStore = {
     },
     async userLogout({ commit }) {
       await logout(
-        ({ data }) => {
-          if (data.message === 'success') {
+        ({ status }) => {
+          console.log(status);
+          if (status === 200) {
             commit('SET_IS_LOGIN', false);
             commit('SET_USER_INFO', null);
             commit('SET_IS_VALID_TOKEN', false);

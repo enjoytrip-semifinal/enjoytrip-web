@@ -58,6 +58,7 @@ export default {
   height: 424px;
   width: 424px;
   border-radius: 24px;
+  cursor: pointer;
 
   img {
     transition-duration: 0.25s;
@@ -88,7 +89,7 @@ export default {
     .content {
       flex: 1;
       font-size: 16px;
-      font-weight: 400;
+      font-weight: 500;
       margin-top: 48px;
       margin-left: 44px;
       margin-right: 44px;
@@ -96,7 +97,7 @@ export default {
 
     .content.small {
       font-size: 12px;
-      font-weight: 400;
+      font-weight: 500;
       margin-top: 32px;
       margin-left: 20px;
       margin-right: 20px;
@@ -104,14 +105,14 @@ export default {
 
     .address {
       font-size: 14px;
-      font-weight: 400;
+      font-weight: 500;
       margin-bottom: 32px;
       margin-left: auto;
       margin-right: 32px;
     }
     .address.small {
       font-size: 12px;
-      font-weight: 400;
+      font-weight: 500;
       margin-bottom: 20px;
       margin-left: auto;
       margin-right: 20px;

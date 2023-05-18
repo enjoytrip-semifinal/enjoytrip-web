@@ -10,12 +10,14 @@ async function login(user, success, fail) {
 }
 
 async function findById(success, fail) {
-  api.defaults.headers['access-token'] = sessionStorage.getItem('access-token');
-  await api.get(`/user/join`).then(success).catch(fail);
+  api.defaults.headers['Authorization'] =
+    'Bearer ' + sessionStorage.getItem('access-token');
+  await api.get(`/user/modify`).then(success).catch(fail);
 }
 
 async function logout(success, fail) {
-  api.defaults.headers['access-token'] = sessionStorage.getItem('access-token');
+  api.defaults.headers['Authorization'] =
+    'Bearer ' + sessionStorage.getItem('access-token');
   await api.get(`/user/logout`).then(success).catch(fail);
 }
 

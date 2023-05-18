@@ -106,6 +106,12 @@ export default {
         #auto-login {
           margin-right: 8px;
         }
+        input {
+          cursor: pointer;
+        }
+        label {
+          cursor: pointer;
+        }
       }
 
       .login-button {
@@ -118,6 +124,7 @@ export default {
         color: white;
         font-size: 24px;
         font-weight: 500;
+        cursor: pointer;
       }
     }
   }
