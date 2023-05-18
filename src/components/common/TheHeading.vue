@@ -17,28 +17,28 @@
         :class="{ white_type: isTop && isHome, black_type: !isHome || !isTop }"
       >
         <router-link to="/notice"
-          ><li @click="onClickNotice">공지사항</li></router-link
+          ><li>공지사항</li></router-link
         >
         <router-link to="/board"
-          ><li @click="onClickBoard">게시판</li></router-link
+          ><li>게시판</li></router-link
         >
         <router-link to="/tour"
-          ><li @click="onClickTour">관광지 조회</li></router-link
+          ><li>관광지 조회</li></router-link
         >
         <router-link to="/place"
-          ><li @click="onClickHotPlace">핫플레이스</li></router-link
+          ><li>핫플레이스</li></router-link
         >
         <router-link to="/plan"
-          ><li @click="onClickPlan">여행 계획</li></router-link
+          ><li>여행 계획</li></router-link
         >
         <router-link to="/login" v-if="!isLogin"
-          ><li @click="onClickLogin">로그인</li></router-link
+          ><li>로그인</li></router-link
         >
         <router-link to="/signup" v-if="!isLogin"
-          ><li @click="onClickSingUp">회원가입</li></router-link
+          ><li>회원가입</li></router-link
         >
         <router-link to="/mypage" v-if="isLogin"
-          ><li @click="onClickMyPage">마이페이지</li></router-link
+          ><li>마이페이지</li></router-link
         >
         <li v-if="isLogin" @click.prevent="onClickLogout">로그아웃</li>
       </ul>
@@ -90,31 +90,6 @@ export default {
         this.$router.push('/');
       }
       this.isTop = true;
-      this.isHome = true;
-    },
-    onClickNotice() {
-      this.isHome = false;
-    },
-    onClickBoard() {
-      this.isHome = false;
-    },
-    onClickTour() {
-      this.isHome = false;
-    },
-    onClickHotPlace() {
-      this.isHome = false;
-    },
-    onClickPlan() {
-      this.isHome = false;
-    },
-    onClickLogin() {
-      this.isHome = false;
-    },
-    onClickSingUp() {
-      this.isHome = false;
-    },
-    onClickMyPage() {
-      this.isHome = false;
     },
     onLogoutButtonClick() {
       localStorage.removeItem('user');
@@ -127,9 +102,19 @@ export default {
       if (this.$route.path !== '/') {
         this.$router.push('/');
       }
+      alert('로그아웃 되었습니다.');
     },
   },
-  watch: {},
+  watch: {
+    $route() {
+      if (this.$route.fullPath !== '/') {
+        this.isHome = false;
+      }
+      else {
+        this.isHome = true;
+      }
+    }
+  },
 };
 </script>
 

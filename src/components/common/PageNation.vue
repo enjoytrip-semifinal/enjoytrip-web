@@ -66,7 +66,7 @@ export default {
   text-decoration: none;
 }
 .pagination li.active {
-  background-color: #e7aa8d;
+  background-color: #ff8080;
   color: #fff;
 }
 .pagination li.active a {

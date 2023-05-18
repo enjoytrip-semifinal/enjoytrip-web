@@ -5,17 +5,21 @@
       <div class="title-section">
         <label class="title-label" for="write-title">제목</label>
         <input
+          v-model="board.title"
           id="write-title"
           class="title-input"
           type="text"
+          ref="write-title"
           placeholder="제목을 입력해주세요."
         />
       </div>
       <div class="content-section">
         <label class="content-label" for="write-content">내용</label>
         <textarea
+          v-model="board.content"
           id="write-content"
           class="content-input"
+          ref="write-content"
           placeholder="내용을 입력해주세요. "
         />
       </div>
@@ -34,7 +38,7 @@
         />
       </div>
       <div class="button-section">
-        <button class="upload-button" @click.prevent="">등록</button>
+        <button class="upload-button" @click.prevent="onClickSubmitBtn">등록</button>
         <button class="cancel-button" @click.prevent="onClickCancelBtn">
           취소
         </button>
@@ -44,12 +48,24 @@
 </template>
 
 <script>
+import userStore from '@/store/modules/userStore';
+import { mapState } from 'vuex';
+import { writeBoard } from '../../utils/board';
+
 export default {
   name: 'TripBoardWrite',
   components: {},
+  computed: {
+    ...mapState(userStore, ['userInfo']),
+  },
   data() {
     return {
-      message: '',
+      board: {
+        title: '',
+        content: '',
+        hit: 0,
+        user_id: 15,
+      }
     };
   },
   created() {},
@@ -57,6 +73,32 @@ export default {
     onClickCancelBtn() {
       this.$router.push('/board/list');
     },
+
+    onClickSubmitBtn() {
+      let err = true;
+      let msg = "";
+      !this.board.title && ((msg = "제목을 입력해주세요"), (err = false), this.$refs['write-title'].focus());
+      err && !this.board.content && ((msg = "내용을 입력해주세요"), (err = false), this.$refs['write-content'].focus());
+
+      if (!err) alert(msg);
+      writeBoard(this.board,
+      ({ data }) => {
+          let msg = "등록 처리시 문제가 발생했습니다.";
+          if (data === "success") {
+            msg = "등록이 완료되었습니다.";
+          }
+          alert(msg);
+          this.moveList();
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
+
+    moveList() {
+      this.$router.push('/board/list');
+    }
   },
 };
 </script>

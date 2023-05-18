@@ -54,7 +54,7 @@ export default {
       let token = sessionStorage.getItem('access-token');
       if (this.isLogin) {
         await this.getUserInfo(token);
-        this.$router.push('/');
+        this.$router.replace('/');
       }
       else {
         alert("로그인에 실패하였습니다.");

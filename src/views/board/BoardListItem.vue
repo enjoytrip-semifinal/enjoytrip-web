@@ -1,9 +1,9 @@
 <template>
   <div class="list-content">
-    <div class="body-no">{{ article.boardNo }}</div>
+    <div class="body-no">{{ article.board_id }}</div>
     <div class="body-title" @click="onClickArticle">{{ article.title }}</div>
-    <div class="body-writer">{{ article.writer }}</div>
-    <div class="body-date">{{ article.date }}</div>
+    <div class="body-writer">{{ article.nickname }}</div>
+    <div class="body-date">{{ article.register_time }}</div>
     <div class="body-hit">{{ article.hit }}</div>
   </div>
 </template>
