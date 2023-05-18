@@ -13,6 +13,7 @@
                 class="id box"
                 id="id"
                 v-model="user.id"
+                @blur="idDuplicateCheck()"
                 placeholder="아이디를 입력해주세요."
               />
               <div v-if="!state.isId">
@@ -108,7 +109,7 @@
 </template>
 
 <script>
-import { signup } from '@/utils/user';
+import { signup, idCheck } from '@/utils/user';
 // import LocationSearchVue from '../components/common/LocationSearch.vue';
 
 export default {
@@ -135,6 +136,7 @@ export default {
         emailErrorMessage: '',
       },
       state: {
+        isIdDuplicate: false,
         isId: false,
         isPassword: false,
         isPasswordCheck: false,
@@ -145,6 +147,18 @@ export default {
   },
   created() {},
   methods: {
+    idDuplicateCheck() {
+      idCheck(
+        this.user.id,
+        () => {
+          this.errorMsg.idErrorMessage = '중복된 아이디 입니다.';
+          this.state.isIdDuplicate = false;
+        },
+        () => {
+          this.state.isIdDuplicate = true;
+        }
+      );
+    },
     handleId() {
       if (this.user.id.length < 4 || this.user.id.length > 12) {
         this.errorMsg.idErrorMessage =
@@ -198,6 +212,7 @@ export default {
     onSubmit(event) {
       event.preventDefault();
       let err =
+        this.state.isIdDuplicate &&
         this.state.isId &&
         this.state.isPassword &&
         this.state.isPasswordCheck &&

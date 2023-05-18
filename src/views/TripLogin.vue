@@ -32,7 +32,6 @@ import { mapActions, mapState } from 'vuex';
 
 const userStore = 'userStore';
 
-// import { login } from '@/utils/user';
 export default {
   name: 'TripLogin',
   components: {},
