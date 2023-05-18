@@ -37,8 +37,8 @@
         <router-link to="/signup" v-if="!isLogin"
           ><li @click="onClickSingUp">회원가입</li></router-link
         >
-        <router-link to="/login" v-if="isLogin"
-          ><li @click="onClickLogin">마이페이지</li></router-link
+        <router-link to="/mypage" v-if="isLogin"
+          ><li @click="onClickMyPage">마이페이지</li></router-link
         >
         <li v-if="isLogin" @click.prevent="onClickLogout">로그아웃</li>
       </ul>
@@ -113,6 +113,9 @@ export default {
     onClickSingUp() {
       this.isHome = false;
     },
+    onClickMyPage() {
+      this.isHome = false;
+    },
     onLogoutButtonClick() {
       localStorage.removeItem('user');
     },
@@ -161,6 +164,9 @@ export default {
     margin-top: 38px;
     transition-duration: 1s;
     color: white;
+    li {
+      cursor: pointer;
+    }
   }
 }
 

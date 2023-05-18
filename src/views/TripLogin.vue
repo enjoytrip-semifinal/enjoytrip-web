@@ -56,6 +56,9 @@ export default {
         await this.getUserInfo(token);
         this.$router.push('/');
       }
+      else {
+        alert("로그인에 실패하였습니다.");
+      }
     },
     moveSignUpPage() {
       this.$router.push('/signup');
@@ -99,9 +102,12 @@ export default {
         padding-left: 24px;
       }
 
+      input {
+        font-family: 'Noto Sans KR', sans-serif;
+      }
+
       .auto {
         margin-right: auto;
-        /* margin-top: 16px; */
         #auto-login {
           margin-right: 8px;
         }

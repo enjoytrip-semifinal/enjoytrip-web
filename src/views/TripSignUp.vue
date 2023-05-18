@@ -13,7 +13,7 @@
                 class="id box"
                 id="id"
                 v-model="user.id"
-                @blur="idDuplicateCheck()"
+                @blur="idDuplicateCheck"
                 placeholder="아이디를 입력해주세요."
               />
               <div v-if="!state.isId">
@@ -226,8 +226,8 @@ export default {
       alert('회원가입!');
       signup(
         this.user,
-        () => alert('성공'),
-        () => alert('실패')
+        () => this.$router.push('/'),
+        () => alert('회원가입에 실패하였습니다.')
       );
     },
     // 다음 주소 api
