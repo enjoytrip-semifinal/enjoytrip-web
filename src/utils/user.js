@@ -21,4 +21,8 @@ async function logout(success, fail) {
   await api.get(`/user/logout`).then(success).catch(fail);
 }
 
-export { signup, login, findById, logout };
+async function idCheck(userid, success, fail) {
+  await api.get(`/exist?id=${userid}`).then(success).catch(fail);
+}
+
+export { signup, login, findById, logout, idCheck };
