@@ -31,7 +31,7 @@
         <div class="header-date">작성일</div>
         <div class="header-hit">조회수</div>
       </div>
-      <div class="list-body" v-for="article in articles" :key="article.boardNo">
+      <div class="list-body" v-for="article in articles" :key="article['board_id']">
         <BoardListItem :article="article" />
       </div>
       <div class="board-pagination">

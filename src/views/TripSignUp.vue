@@ -3,7 +3,7 @@
     <div class="signup-container">
       <div class="title">회원가입</div>
       <div class="comment"><span class="require">*</span> 필수 입력 사항</div>
-      <form class="signup-form" @submit="onSubmit">
+      <form class="signup-form">
         <div class="content">
           <div class="id-section input-section">
             <label for="id">아이디<span class="require">*</span></label>
@@ -102,7 +102,7 @@
 
           <!-- <LocationSearchVue /> -->
         </div>
-        <button class="signup-button" type="submit">가입하기</button>
+        <button class="signup-button" @click="onSubmit">가입하기</button>
       </form>
     </div>
   </div>
@@ -210,6 +210,7 @@ export default {
       }
     },
     onSubmit(event) {
+      console.log('가입버튼클릭');
       event.preventDefault();
       let err =
         this.state.isIdDuplicate &&

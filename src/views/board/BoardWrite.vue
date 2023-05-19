@@ -64,11 +64,13 @@ export default {
         title: '',
         content: '',
         hit: 0,
-        user_id: 15,
-      }
+        user_id: 0,
+      },
     };
   },
-  created() {},
+  created() {
+    this.user_id = this.userInfo.id;
+  },
   methods: {
     onClickCancelBtn() {
       this.$router.push('/board/list');

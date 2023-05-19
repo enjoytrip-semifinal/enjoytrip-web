@@ -21,7 +21,7 @@ export default {
   created() {},
   methods: {
     onClickArticle() {
-      this.$router.push(`/board/list/${this.article.boardNo}`);
+      this.$router.push(`/board/list/${this.article['board_id']}`);
     },
   },
 };
