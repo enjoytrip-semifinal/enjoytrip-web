@@ -30,6 +30,12 @@ const userStore = {
     SET_USER_INFO: (state, userInfo) => {
       state.userInfo = userInfo;
     },
+    MODIFY_USER_INFO: (state, userInfo) => {
+      for (let key in userInfo) {
+        const value = userInfo[key]
+        state.userInfo[key] = value;
+      }
+    }
   },
   actions: {
     async userConfirm({ commit }, user) {
@@ -57,6 +63,9 @@ const userStore = {
           console.log(error);
         }
       );
+    },
+    userModify({ commit }, user) {
+      commit('MODIFY_USER_INFO', user);
     },
     async getUserInfo({ commit, dispatch }) {
       await findById(

@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import { modfiyUser } from '../../utils/user';
 
 const userStore = 'userStore';
@@ -80,6 +80,7 @@ export default {
     ...mapState(userStore, ['userInfo']),
   },
   methods: {
+    ...mapActions(userStore, ['userModify']),
     handleNickName() {
       if (this.user.nickname.length < 2 || this.user.nickname.length > 12) {
         this.errorMsg.nickNameErrorMessage =
@@ -144,8 +145,9 @@ export default {
       modfiyUser(this.user,
         ({ status }) => {
           if (status === 200) {
+            this.userModify(this.user);
             alert('유저 정보가 수정되었습니다.');
-            this.$router.go('/mypage');
+            this.$router.push('/mypage');
           }
           else {
             alert('정보 수정에 실패했습니다.');

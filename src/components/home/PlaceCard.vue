@@ -2,6 +2,11 @@
   <div class="card-box" :style="size">
     <img :src="this.imgUrl" alt="" />
     <div class="card-body" :style="size">
+      <div class="like"><img src="@/assets/images/ic-heart-empty.png"/></div>
+      <div class="like-hover">
+        <img src="@/assets/images/ic-heart-fill.png"/>
+        <p class="like-num">112</p>
+      </div>
       <div class="title" :class="[type === 's' ? 'small' : '']">제목</div>
       <div class="content" :class="[type === 's' ? 'small' : '']">
         {{
@@ -75,6 +80,26 @@ export default {
     color: rgba($color: #ffffff, $alpha: 0);
     transition-duration: 0.25s;
 
+    .like {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      img {
+        height: 24px;
+        width: 24px;
+      }
+    }
+
+    .like-hover {
+      position: absolute;
+      display: none;
+      bottom: 20px;
+      left: 20px;
+      img {
+        height: 24px;
+        width: 24px;
+      }
+    }
     .title {
       font-size: 28px;
       font-weight: 700;
@@ -128,6 +153,21 @@ export default {
       display: flex;
       color: rgba($color: #ffffff, $alpha: 1);
       transition-duration: 0.4s;
+    }
+    .like {
+      display: none;
+    }
+    .like-hover {
+      display: flex;
+      flex-direction: column;
+      font-size: 12px;
+      color: white;
+      font-weight: 400;
+      align-items: center;
+      z-index: 100;
+      img {
+      filter: none;
+    }
     }
   }
 }

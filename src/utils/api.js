@@ -12,6 +12,18 @@ function apiInstance() {
   return instance;
 }
 
+function securityApiInstance() {
+  console.log(process.env.VUE_APP_API_BASE_URL);
+  const instance = axios.create({
+    baseURL: process.env.VUE_APP_API_BASE_URL,
+    headers: {
+      Authorization : 'Bearer ' + sessionStorage.getItem('access-token'),
+      'Content-Type': 'application/json;charset-utf-8',
+    },
+  });
+  return instance;
+}
+
 // common data API axios instance
 function tripInstance() {
   const instance = axios.create({
@@ -23,4 +35,4 @@ function tripInstance() {
   return instance;
 }
 
-export { apiInstance, tripInstance };
+export { apiInstance, tripInstance, securityApiInstance };

@@ -86,10 +86,9 @@ export default {
       this.scrollPosition = window.scrollY;
     },
     onClickLogo() {
-      if (this.$route.path != '/') {
+      if (this.$route.fullPath != '/') {
         this.$router.push('/');
       }
-      this.isTop = true;
     },
     onLogoutButtonClick() {
       localStorage.removeItem('user');
@@ -109,11 +108,14 @@ export default {
     $route() {
       if (this.$route.fullPath !== '/') {
         this.isHome = false;
+        this.isTop = true;
       }
       else {
         this.isHome = true;
+        this.isTop = true;
       }
-    }
+      this.scrollPosition = 0;
+    },
   },
 };
 </script>
