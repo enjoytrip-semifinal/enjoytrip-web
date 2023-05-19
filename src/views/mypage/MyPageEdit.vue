@@ -37,14 +37,15 @@
       </div>
     </form>
     <div class="button-area">
-        <button class="edit">수정</button>
-        <button class="cancel" @click="clickCancelBtn">취소</button>
+        <button class="edit" @click="onClickEditBtn" >수정</button>
+        <button class="cancel" @click="onClickCancelBtn">취소</button>
       </div>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
+import { modfiyUser } from '../../utils/user';
 
 const userStore = 'userStore';
 
@@ -139,7 +140,20 @@ export default {
         },
       }).open();
     },
-    clickCancelBtn() {
+    onClickEditBtn() {
+      modfiyUser(this.user,
+        ({ status }) => {
+          if (status === 200) {
+            alert('유저 정보가 수정되었습니다.');
+            this.$router.go('/mypage');
+          }
+          else {
+            alert('정보 수정에 실패했습니다.');
+        }
+      }
+      )
+    },
+    onClickCancelBtn() {
       this.$router.go(-1);
     },
   },

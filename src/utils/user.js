@@ -25,4 +25,10 @@ async function idCheck(userid, success, fail) {
   await api.get(`/exist?id=${userid}`).then(success).catch(fail);
 }
 
-export { signup, login, findById, logout, idCheck };
+async function modfiyUser(user, success, fail) {
+  api.defaults.headers['Authorization'] =
+    'Bearer ' + sessionStorage.getItem('access-token');
+  await api.put(`/modify`, JSON.stringify(user)).then(success).catch(fail);
+}
+
+export { signup, login, findById, logout, idCheck, modfiyUser };
