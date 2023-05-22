@@ -135,6 +135,14 @@ export default {
       font-size: 18px;
       font-weight: 700;
       padding: 0 20px;
+      /* Change the color to your own background color */
+      input:-webkit-autofill,
+      input:-webkit-autofill:hover,
+      input:-webkit-autofill:focus,
+      input:-webkit-autofill:active {
+      transition: background-color 5000s;
+      -webkit-text-fill-color: #fff !important;
+      }
     }
     label {
       font-size: 20px;

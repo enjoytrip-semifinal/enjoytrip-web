@@ -198,7 +198,7 @@ export default {
       background: #fefefe;
       box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
       z-index: 10;
-      overflow: scroll;
+      
       .search-area {
         position: fixed;
         width: 380px;
@@ -224,6 +224,12 @@ export default {
       .places {
         flex: 1;
         margin-top: 69px;
+        overflow: scroll;
+        -ms-overflow-style: none; /* 인터넷 익스플로러 */
+        scrollbar-width: none; /* 파이어폭스 */
+        &::-webkit-scrollbar {
+            display: none; /* 크롬, 사파리, 오페라, 엣지 */
+        }
         .place {
           padding: 20px 12px;
           border: 1px solid transparent;
