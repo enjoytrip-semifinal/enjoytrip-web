@@ -30,6 +30,7 @@
                 id="pw"
                 v-model="user.password"
                 placeholder="비밀번호를 입력해주세요."
+                autocomplete="off"
               />
               <div v-if="!state.isPassword">
                 <p class="error">{{ errorMsg.passwordErrorMessage }}</p>
@@ -47,6 +48,7 @@
                 id="pw-verify"
                 v-model="passwordCheck"
                 placeholder="비밀번호를 다시 입력해주세요."
+                autocomplete="off"
               />
               <div v-if="!state.isPasswordCheck">
                 <p class="error">{{ errorMsg.passwordCheckErrorMessage }}</p>
@@ -110,12 +112,10 @@
 
 <script>
 import { signup, idCheck } from '@/utils/user';
-// import LocationSearchVue from '../components/common/LocationSearch.vue';
 
 export default {
   name: 'TripSignUp',
   components: {
-    // LocationSearchVue,
   },
   data() {
     return {
@@ -151,11 +151,11 @@ export default {
       idCheck(
         this.user.id,
         () => {
-          this.errorMsg.idErrorMessage = '중복된 아이디 입니다.';
-          this.state.isIdDuplicate = false;
+          this.state.isIdDuplicate = true;
         },
         () => {
-          this.state.isIdDuplicate = true;
+          this.errorMsg.idErrorMessage = '중복된 아이디 입니다.';
+          this.state.isIdDuplicate = false;
         }
       );
     },
@@ -221,7 +221,7 @@ export default {
         this.state.isEmail &&
         this.user.address !== '';
       if (!err) {
-        alert('회원가입에 실패했습니다.');
+        alert('회원가입에 실패했습니다(1).');
         return;
       }
       alert('회원가입!');
@@ -230,6 +230,7 @@ export default {
         () => this.$router.push('/'),
         () => alert('회원가입에 실패하였습니다.')
       );
+      return;
     },
     // 다음 주소 api
     onPostcode() {

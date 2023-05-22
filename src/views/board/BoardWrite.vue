@@ -48,15 +48,16 @@
 </template>
 
 <script>
-import userStore from '@/store/modules/userStore';
 import { mapState } from 'vuex';
 import { writeBoard } from '../../utils/board';
+
+const userStore = 'userStore';
 
 export default {
   name: 'TripBoardWrite',
   components: {},
   computed: {
-    ...mapState(userStore, ['userInfo']),
+    ...mapState(userStore, ['userInfo', 'isLogin']),
   },
   data() {
     return {
@@ -69,8 +70,15 @@ export default {
     };
   },
   created() {
-    this.user_id = this.userInfo.id;
+    // console.log(this.userInfo);
+    // console.log(this.user_id());
+    console.log(this.userInfo.user_id);
+    this.board.user_id = this.userInfo.user_id;
   },
+  // mounted() {
+  //   console.log(this.userInfo);
+  //   this.user_id = this.userInfo.user_id;
+  // },
   methods: {
     onClickCancelBtn() {
       this.$router.push('/board/list');
@@ -82,11 +90,14 @@ export default {
       !this.board.title && ((msg = "제목을 입력해주세요"), (err = false), this.$refs['write-title'].focus());
       err && !this.board.content && ((msg = "내용을 입력해주세요"), (err = false), this.$refs['write-content'].focus());
 
-      if (!err) alert(msg);
+      if (!err) {
+        alert(msg);
+        return;
+      }
       writeBoard(this.board,
-      ({ data }) => {
+      ({ status }) => {
           let msg = "등록 처리시 문제가 발생했습니다.";
-          if (data === "success") {
+          if (status === 200) {
             msg = "등록이 완료되었습니다.";
           }
           alert(msg);

@@ -256,7 +256,7 @@ export default {
 
           .address {
             font-size: 12px;
-            font-weight: 400;
+            font-weight: 500;
             margin-top: 4px;
           }
           &:hover {

@@ -65,8 +65,8 @@ export default {
     listBoard(
       param,
       ({ data }) => {
-        console.log(data);
-        this.articles = data;
+        console.log('[data]', data.bordList);
+        this.articles = data.bordList;
       },
       (error) => {
         console.log(error);

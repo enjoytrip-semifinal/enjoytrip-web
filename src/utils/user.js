@@ -4,7 +4,9 @@ const api = apiInstance();
 const securityApi = securityApiInstance();
 
 async function signup(user, success, fail) {
+  console.log('기다리는중...');
   await api.post(`/user/join`, JSON.stringify(user)).then(success).catch(fail);
+  console.log('완료...');
 }
 async function login(user, success, fail) {
   await api.post(`/user/login`, JSON.stringify(user)).then(success).catch(fail);
