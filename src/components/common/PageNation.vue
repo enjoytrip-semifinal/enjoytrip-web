@@ -27,6 +27,7 @@ export default {
   created() {},
   methods: {
     changePage: function (pageNum) {
+      this.$emit('pageFromChild', pageNum)
       this.selectPage = pageNum;
       console.log(pageNum);
     },
@@ -49,6 +50,8 @@ export default {
   border-radius: 6px;
   border: 1px solid #eee;
   color: #666;
+  align-items: center;
+  justify-content: center;
 }
 
 .pagination li a {
