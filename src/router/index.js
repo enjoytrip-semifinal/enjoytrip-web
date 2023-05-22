@@ -61,7 +61,6 @@ const routes = [
   },
   {
     path: '/place',
-    name: 'place',
     component: TripPlace,
     children: [
       {
@@ -93,7 +92,6 @@ const routes = [
   },
   {
     path: '/mypage',
-    name: 'mypage',
     component: TripMyPage,
     children: [
       {

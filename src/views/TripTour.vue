@@ -1,16 +1,14 @@
 <template>
   <div class="tour-container">
-    <TourSidebarVue />
     <TourMapVue />
   </div>
 </template>
 
 <script>
 import TourMapVue from '../components/tour/TourMap.vue';
-import TourSidebarVue from '../components/tour/TourSidebar.vue';
 export default {
   name: 'TripTour',
-  components: {TourMapVue, TourSidebarVue},
+  components: { TourMapVue },
   data() {
     return {
       message: '',

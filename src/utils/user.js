@@ -27,7 +27,10 @@ async function idCheck(userid, success, fail) {
 }
 
 async function modfiyUser(user, success, fail) {
-  await securityApi.put(`/user/modify`, JSON.stringify(user)).then(success).catch(fail);
+  await securityApi
+    .put(`/user/modify`, JSON.stringify(user))
+    .then(success)
+    .catch(fail);
 }
 
 export { signup, login, findById, logout, idCheck, modfiyUser };
