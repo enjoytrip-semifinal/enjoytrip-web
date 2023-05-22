@@ -4,19 +4,16 @@
     <div class="top-line">
       <div class="search-line">
         <div class="selectBox">
-          <select name="search" class="select">
-            <option value="all">전체검색</option>
-            <option value="title">제목</option>
-            <option value="writer">작성자</option>
-            <option value="content">내용</option>
+          <select name="search" class="select" :value="selected" @change="setSelect($event)">
+            <option v-for="(item) in selectList" :key="item.value">{{ item.name }}</option>
           </select>
           <span class="icoArrow"
             ><img src="@/assets/images/arrow-down.png" alt=""
           /></span>
         </div>
         <div class="search-bar">
-          <input type="text" placeholder="검색어를 입력해주세요." />
-          <span class="icoSearch"
+          <input type="text" placeholder="검색어를 입력해주세요." v-model="searchInput"/>
+          <span class="icoSearch" @click="onClickSearch"
             ><img src="@/assets/images/search.png" alt=""
           /></span>
         </div>
@@ -32,10 +29,10 @@
         <div class="header-hit">조회수</div>
       </div>
       <div class="list-body" v-for="article in articles" :key="article['board_id']">
-        <BoardListItem :article="article" />
+        <BoardListItem :article="article"/>
       </div>
       <div class="board-pagination">
-        <PageNation />
+        <PageNation @pageFromChild="pageChange"/>
       </div>
     </div>
   </div>
@@ -53,35 +50,85 @@ export default {
   },
   data() {
     return {
+      selectList: [
+        { name: "전체검색", value: "all" },
+        { name: "제목", value: "title" },
+        { name: "글쓴이", value: "writer" },
+        { name: "내용", value: "content" },
+      ],
+      selected: "전체검색",
       articles: [],
+      searchInput: '',
+      param: {
+        pgno: 1,
+        key: '',
+        word: '',
+      }
     };
   },
   created() {
-    let param = {
-      pgno: 1,
-      word: '',
-      writer: '',
-    }
-    listBoard(
-      param,
+    this.loadBoard();
+  },
+  methods: {
+    loadBoard() {
+      listBoard(
+      this.param,
       ({ data }) => {
-        console.log('[data]', data.bordList);
-        this.articles = data.bordList;
+        console.log('[data]', data.boardList);
+        this.articles = data.boardList;
       },
       (error) => {
         console.log(error);
       }
     )
-  },
-  methods: {
+    },
     onClickWriteBtn() {
       this.$router.push('/board/write');
+    },
+    pageChange(pgno) {
+      this.param.pgno = pgno;
+      this.loadBoard();
+    },
+    setSelect(event) {
+      // 변경 적용
+      this.selected = event.target.value;
+      console.log(this.selected);
+    },
+    onClickSearch() {
+      if (this.selected === '전체검색') {
+        this.param.word = this.searchInput;
+        this.param.key = '';
+        console.log(this.param.key);
+        this.loadBoard();
+        return;
+      }
+      if (this.selected === '제목') {
+        console.log(this.selected);
+        this.param.word = this.searchInput;
+        this.param.key = 'title';
+        this.loadBoard();
+        return;
+      }
+      if (this.selected === '글쓴이') {
+        console.log(this.selected);
+        this.param.word = this.searchInput;
+        this.param.key = 'userId'
+        this.loadBoard();
+        return;
+      }
+      if (this.selected === '내용') {
+        console.log(this.selected);
+        this.param.word = this.searchInput;
+        this.param.key = 'content'
+        this.loadBoard();
+        return;
+      }
     },
   },
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 /* inputBox 스타일링 초기화 */
 /* IE */
 select::-ms-expand {

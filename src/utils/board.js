@@ -26,4 +26,10 @@ function deleteBoard(boardid, success, fail) {
   api.delete(`/board/delete/${boardid}`).then(success).catch(fail);
 }
 
-export { listBoard, writeBoard, getBoard, modifyBoard, deleteBoard };
+function hitBoard() { }
+
+function viewBoard(boardid, success, fail) {
+  api.get(`/board/list/${boardid}`).then(success).catch(fail);
+}
+
+export { listBoard, writeBoard, getBoard, modifyBoard, deleteBoard, hitBoard, viewBoard };

@@ -56,6 +56,7 @@
 
 <script>
 import PlaceCardVue from '@/components/home/PlaceCard.vue';
+import { listHotPlace } from '@/utils/place';
 export default {
   name: 'TripPlaceMain',
   components: {
@@ -63,6 +64,14 @@ export default {
   },
   data() {
     return {
+      param: {
+        pgno: 1,
+        sido: '',
+        gugun: '',
+        type: '',
+        season: '',
+      },
+      hotPlaces: [],
       imgUrl: [
         require('@/assets/images/test1.png'),
         require('@/assets/images/test2.png'),
@@ -70,13 +79,27 @@ export default {
       ],
     };
   },
-  created() {},
+  created() {
+    this.loadHotPlace();
+  },
   methods: {
     onClickRegisterBtn() {
       // this.$router.push('/place/write');
     },
+    loadHotPlace() {
+      listHotPlace(
+        this.param,
+        ({ data }) => {
+          console.log('[data]', data);
+          this.articles = data.bordList;
+        },
+        (error) => {
+          console.log(error);
+        }
+      )
+    },
   },
-};
+}
 </script>
 
 <style scoped lang="scss">

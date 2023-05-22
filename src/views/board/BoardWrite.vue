@@ -70,15 +70,9 @@ export default {
     };
   },
   created() {
-    // console.log(this.userInfo);
-    // console.log(this.user_id());
     console.log(this.userInfo.user_id);
     this.board.user_id = this.userInfo.user_id;
   },
-  // mounted() {
-  //   console.log(this.userInfo);
-  //   this.user_id = this.userInfo.user_id;
-  // },
   methods: {
     onClickCancelBtn() {
       this.$router.push('/board/list');

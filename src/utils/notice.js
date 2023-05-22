@@ -3,11 +3,11 @@ import { apiInstance } from "../utils/api.js";
 const api = apiInstance();
 
 function listArticle(param, success, fail) {
-  api.get(`/notice`, { params: param }).then(success).catch(fail);
+  api.get(`/notice/list`, { params: param }).then(success).catch(fail);
 }
 
 function writeArticle(article, success, fail) {
-  api.post(`/notice`, JSON.stringify(article)).then(success).catch(fail);
+  api.post(`/notice/write`, JSON.stringify(article)).then(success).catch(fail);
 }
 
 function getArticle(articleno, success, fail) {

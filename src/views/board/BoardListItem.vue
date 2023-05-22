@@ -3,7 +3,7 @@
     <div class="body-no">{{ article.board_id }}</div>
     <div class="body-title" @click="onClickArticle">{{ article.title }}</div>
     <div class="body-writer">{{ article.nickname }}</div>
-    <div class="body-date">{{ article.register_time }}</div>
+    <div class="body-date">{{ elapsedTime(article.register_date) }}</div>
     <div class="body-hit">{{ article.hit }}</div>
   </div>
 </template>
@@ -23,7 +23,34 @@ export default {
     onClickArticle() {
       this.$router.push(`/board/list/${this.article['board_id']}`);
     },
+    elapsedTime(date) {
+  const start = new Date(date);
+  const end = new Date(); // 현재 날짜
+  
+  const diff = (end - start) / 1000; // 경과 시간
+ 
+  const times = [
+    { name: '시간', milliSeconds: 60 * 60 },
+    { name: '분', milliSeconds: 60 },
+  ];
+  
+  // 년 단위부터 알맞는 단위 찾기
+  for (const value of times) {
+    const betweenTime = Math.floor(diff / value.milliSeconds);
+
+    if (betweenTime >= 24) {
+      return date.split(' ')[0];
+    }
+    // 큰 단위는 0보다 작은 소수 단위 나옴
+    if (betweenTime > 0) {
+      return `${betweenTime}${value.name} 전`;
+    }
+  }
+  // 모든 단위가 맞지 않을 시
+  return "방금 전";
+}
   },
+  
 };
 </script>
 

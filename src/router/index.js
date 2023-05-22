@@ -17,6 +17,9 @@ import PlaceView from "@/views/place/PlaceView";
 import TripNoticeList from "@/views/notice/NoticeList";
 import TripNoticeWrite from "@/views/notice/NoticeWrite";
 import TripNoticeListView from "@/views/notice/NoticeListView";
+import MyPageMain from '@/views/mypage/MyPageMain';
+import MyPageReview from '@/views/mypage/MyPageReview';
+import MyPageEdit from '@/views/mypage/MyPageEdit';
 
 Vue.use(VueRouter);
 
@@ -111,6 +114,23 @@ const routes = [
   {
     path: '/mypage',
     component: TripMyPage,
+    children: [
+      {
+        path: '',
+        name: 'myPageMain',
+        component: MyPageMain,
+      },
+      {
+        path: 'edit',
+        name: 'myPageEdit',
+        component: MyPageEdit,
+      },
+      {
+        path: 'review',
+        name: 'myPageReview',
+        component: MyPageReview,
+      },
+    ],
   },
 ];
 
