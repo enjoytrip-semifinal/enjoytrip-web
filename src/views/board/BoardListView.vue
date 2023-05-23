@@ -14,7 +14,13 @@
         board.content
       }}
     </div>
-    <div class="comment">댓글</div>
+    <div class="comment">
+      <p>댓글</p>
+      <div class="controll-button-area" v-if="isControll">
+        <button class="edit" @click="onClickEditBtn">수정</button>
+        <button class="delete">삭제</button>
+      </div>
+    </div>
     <div class="comment-num">총 2개</div>
     <div v-if="!isInput" class="comment-input-area" @click="onClickComment">
       <img src="@/assets/images/comment.png" alt="" />
@@ -66,6 +72,10 @@
 
 <script>
 import { viewBoard } from '../../utils/board';
+import { mapState } from 'vuex';
+
+const userStore = 'userStore';
+
 export default {
   name: 'TripBoardListView',
   components: {},
@@ -104,11 +114,19 @@ export default {
           content: '정말 최고다!',
         },
       ],
-      isInput: false,
+      isInput: false, 
+      isControll: false,
     };
   },
+  computed: {
+    ...mapState(userStore, ['userInfo']),
+  },  
   created() {
     this.loadView();
+    // 로그인 되어있는 아이디와 게시글 아이디 비교
+    this.isControll = this.userInfo.user_id === this.board.user_id;
+    console.log(this.userInfo.user_id);
+    console.log(this.board.user_id);
   },
   methods: {
     onClickComment() {
@@ -125,11 +143,15 @@ export default {
         ({ data }) => {
           this.board = data.board;
           console.log(this.board);
+          this.isControll = Number(this.userInfo.user_id) === Number(this.board.user_id);
         },
         () => {
           console.log('게시글 불러오기 실패');
         }
       );
+    },
+    onClickEditBtn() {
+      this.$router.push(`/board/edit/${this.board.board_id}`);
     }
   },
 };
@@ -179,8 +201,29 @@ export default {
     padding-bottom: 60px;
   }
   .comment {
+    display: flex;
     font-size: 28px;
     font-weight: 700;
+    justify-content: space-between;
+
+    .controll-button-area {
+      display: flex;
+      gap: 6px;
+      button {
+        padding: 8px 16px;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 4px;
+      }
+      .edit {
+        background-color: #8d8d8d;
+        color: white;
+      }
+      .delete {
+        background-color: #fc4444;
+        color: white;
+      }
+    }
   }
 
   .comment-num {
