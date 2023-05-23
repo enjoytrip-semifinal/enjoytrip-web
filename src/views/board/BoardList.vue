@@ -63,7 +63,8 @@ export default {
         pgno: 1,
         key: '',
         word: '',
-      }
+      },
+      totalPageNum: 0,
     };
   },
   created() {
