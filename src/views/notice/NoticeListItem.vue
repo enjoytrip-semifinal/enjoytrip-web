@@ -1,9 +1,9 @@
 <template>
   <div class="list-content">
-    <div class="body-no">{{ article.noticeNo }}</div>
+    <div class="body-no">{{ article.noticeid }}</div>
     <div class="body-title" @click="onClickArticle">{{ article.title }}</div>
-    <div class="body-writer">{{ article.writer }}</div>
-    <div class="body-date">{{ article.date }}</div>
+    <div class="body-writer">관리자</div>
+    <div class="body-date">{{ article.registerdate }}</div>
     <div class="body-hit">{{ article.hit }}</div>
   </div>
 </template>
