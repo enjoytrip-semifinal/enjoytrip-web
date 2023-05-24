@@ -8,17 +8,92 @@
         <span class="material-symbols-outlined"> zoom_out </span>
       </button>
     </div>
+    <div class="map-category">
+      <div
+        class="tour tag"
+        @click="onClickTourTag"
+        :class="{ active: category === 'tour' }"
+      >
+        <span class="material-symbols-outlined"> tour </span>
+        <div class="name">관광지</div>
+      </div>
+      <div
+        class="tour tag"
+        @click="onClickCultureTag"
+        :class="{ active: category === 'culture' }"
+      >
+        <span class="material-symbols-outlined"> home_work </span>
+        <div class="name">문화시설</div>
+      </div>
+      <div
+        class="tour tag"
+        @click="onClickFestivalTag"
+        :class="{ active: category === 'festival' }"
+      >
+        <span class="material-symbols-outlined"> festival </span>
+        <div class="name">축제공연행사</div>
+      </div>
+      <div
+        class="tour tag"
+        @click="onClickPlanTag"
+        :class="{ active: category === 'plan' }"
+      >
+        <span class="material-symbols-outlined"> next_plan </span>
+        <div class="name">여행코스</div>
+      </div>
+      <div
+        class="tour tag"
+        @click="onClickLeportsTag"
+        :class="{ active: category === 'reports' }"
+      >
+        <span class="material-symbols-outlined"> surfing </span>
+        <div class="name">레포츠</div>
+      </div>
+      <div
+        class="tour tag"
+        @click="onClickLodgmentTag"
+        :class="{ active: category === 'lodgment' }"
+      >
+        <span class="material-symbols-outlined"> bed </span>
+        <div class="name">숙박</div>
+      </div>
+      <div
+        class="tour tag"
+        @click="onClickShoppingTag"
+        :class="{ active: category === 'shopping' }"
+      >
+        <span class="material-symbols-outlined"> shopping_cart </span>
+        <div class="name">쇼핑</div>
+      </div>
+      <div
+        class="tour tag"
+        @click="onClickRestaurantTag"
+        :class="{ active: category === 'restaurant' }"
+      >
+        <span class="material-symbols-outlined"> restaurant </span>
+        <div class="name">음식점</div>
+      </div>
+    </div>
     <div class="map-area">
       <div class="sidebar-container">
         <div class="search-area">
-          <input type="text" placeholder="검색어를 입력해주세요." />
+          <input
+            type="text"
+            placeholder="검색어를 입력해주세요."
+            v-model="input"
+          />
+          <div class="search-button" @click="onClickSearchBtn">
+            <span class="material-symbols-outlined"> search </span>
+          </div>
         </div>
+
         <div class="places">
           <div
             class="place"
-            v-for="place in places"
-            :key="place.contentid"
+            v-for="(place, index) in places"
+            :key="index"
             @click="showOnMap(place)"
+            :class="{ active: place === activePlace }"
           >
             <img :src="place.firstimage" alt="" />
             <div class="top-section">
@@ -27,21 +102,44 @@
             </div>
             <p class="address">{{ place.addr1 + ' ' + place.addr2 }}</p>
           </div>
+          <infinite-loading :identifier="keyword" @infinite="infiniteHandler">
+            <template #no-more>
+              <span></span>
+            </template>
+          </infinite-loading>
         </div>
       </div>
-      <div id="map" ref="map"></div>
+      <div id="map" ref="map">
+        <div class="overlay-popup" ref="placeOverlay" slot="overlay">
+          <div v-if="overlayPlace">
+            <img class="overlay-image" :src="overlayPlace.firstimage" />
+            <h3 class="overlay-title">{{ overlayPlace.title }}</h3>
+            <div class="overlay-address">
+              {{ overlayPlace.addr1 + ' ' + overlayPlace.addr2 }}
+            </div>
+            <a class="close" href="#" @click.prevent="closeOverlay()"
+              ><span class="material-symbols-outlined"> close </span></a
+            >
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { tripInstance } from '@/utils/api';
-// import { changeTypeToString } from '@/utils/tour';
+import MarkerHandler from '@/utils/map/marker-handler';
+import KakaoOverlay from '@/utils/map/overlay';
+import InfiniteLoading from 'vue-infinite-loading';
+import { mapState } from 'vuex';
+
+const userStore = 'userStore';
 
 let kakao = window.kakao;
 export default {
   name: 'TripMap',
-  components: {},
+  components: { InfiniteLoading },
   data() {
     return {
       mapInstance: null,
@@ -53,32 +151,41 @@ export default {
         level: 3,
       },
       places: [], // empty
+      markerList: [],
+      markers: null, // marker handler
+      activePlace: null, // selected place!
+      overlay: null, // overlay 인스턴스
+      overlayPlace: null, // overlay에 보여줄 장소
+      page: 1,
+      input: '', // 검색어
+      keyword: '구미', // 타겟 검색어
+      category: '', // 현재 카테고리
+      contentType: '',
     };
   },
+
   mounted() {
+    const container = this.$refs.map;
     kakao = kakao || window.kakao;
 
-    const container = this.$refs.map;
     const { center, level } = this.mapOption;
     this.mapInstance = new kakao.maps.Map(container, {
       center: new kakao.maps.LatLng(center.lat, center.lng),
       level,
     });
 
-    // 공공 데이터 불러오기
-    tripInstance()
-      .get(
-        `locationBasedList1?serviceKey=${process.env.VUE_APP_TRIP_API_KEY}&numOfRows=10&pageNo=1&MobileOS=ETC&MobileApp=AppTest&_type=json&listYN=Y&arrange=A&mapX=126.981611&mapY=37.568477&radius=1000`
-      )
-      .then((res) => {
-        this.places = res.data.response.body.items.item;
-        console.log(res.data.response.body.items.item);
-        console.log(
-          this.changeTypeToString(
-            res.data.response.body.items.item[0].contenttypeid
-          )
-        );
-      });
+    this.markers = new MarkerHandler(this.mapInstance, {
+      markerClicked: (place) => {
+        console.log('[clicked]', place);
+        this.showOnMap(place);
+        // 마커 클릭시
+        this.overlayPlace = place;
+        console.log(place);
+        this.overlay.showAt(place.mapy, place.mapx);
+      },
+    });
+
+    this.overlay = new KakaoOverlay(this.mapInstance, this.$refs.placeOverlay);
   },
   created() {},
   methods: {
@@ -92,15 +199,155 @@ export default {
       this.mapOption.level = level;
     },
     showOnMap(place) {
+      this.activePlace = place;
       this.mapOption.center = {
         lat: place.mapy,
         lng: place.mapx,
       };
     },
+    closeOverlay() {
+      this.overlay.hide();
+    },
     updateLevel(level) {
       this.mapOption.level = level;
       console.log('[level]', this.mapOption.level);
     },
+
+    loadSearchTripData(input) {
+      tripInstance()
+        .get(
+          `/searchKeyword1?serviceKey=${process.env.VUE_APP_TRIP_API_KEY}&numOfRows=10&pageNo=1&MobileOS=ETC&MobileApp=AppTest&_type=json&listYN=Y&arrange=A&keyword=${input}${this.contentType}`
+        )
+        .then((res) => {
+          this.places = res.data.response.body.items.item;
+          // 첫번째 검색 위치로 이동
+          this.mapInstance.panTo(
+            new kakao.maps.LatLng(this.places[0].mapy, this.places[0].mapx)
+          );
+          // 스크롤 맨 위로 이동
+          window.document.getElementsByClassName('places')[0].scrollTo(0, 0);
+          // create markers
+          this.markerList.push(
+            this.markers.add(this.places, (place) => {
+              console.log('[maker 생성]', place);
+              return { lat: place.mapy, lng: place.mapx };
+            })
+          );
+        })
+        .catch(() => {
+          alert('관련 정보가 없습니다!');
+          return;
+        });
+    },
+
+    onClickSearchBtn() {
+      if (this.keyword === '') {
+        return;
+      }
+
+      this.page = 1;
+      this.keyword = this.input;
+      // 기존 마커들 삭제
+      this.markers.removeAll(this.markerList);
+      this.markerList = [];
+
+      // 키워드로 api 불러오기
+      this.loadSearchTripData(this.keyword);
+    },
+
+    infiniteHandler($state) {
+      console.log('호출');
+      let paramKeyword = this.keyword ? `${this.keyword}` : '구미';
+      tripInstance()
+        .get(
+          `/searchKeyword1?serviceKey=${process.env.VUE_APP_TRIP_API_KEY}&numOfRows=10&pageNo=${this.page}&MobileOS=ETC&MobileApp=AppTest&_type=json&listYN=Y&arrange=A&keyword=${paramKeyword}${this.contentType}`
+        )
+        .then(({ data }) => {
+          if (data.response.body.items !== '') {
+            console.log(data);
+            this.page += 1;
+            this.places.push(...data.response.body.items.item);
+            $state.loaded();
+            // create markers
+            this.markerList.push(
+              this.markers.add(data.response.body.items.item, (place) => {
+                console.log('[maker 생성]', place);
+                return { lat: place.mapy, lng: place.mapx };
+              })
+            );
+          } else {
+            $state.complete();
+          }
+        })
+        .catch(() => {
+          console.log('error!!');
+        });
+    },
+
+    onClickTourTag() {
+      if (this.category === 'tour') {
+        this.category = '';
+        return;
+      }
+      this.category = 'tour';
+    },
+
+    onClickCultureTag() {
+      if (this.category === 'culture') {
+        this.category = '';
+        return;
+      }
+      this.category = 'culture';
+    },
+
+    onClickFestivalTag() {
+      if (this.category === 'festival') {
+        this.category = '';
+        return;
+      }
+      this.category = 'festival';
+    },
+
+    onClickPlanTag() {
+      if (this.category === 'plan') {
+        this.category = '';
+        return;
+      }
+      this.category = 'plan';
+    },
+
+    onClickLeportsTag() {
+      if (this.category === 'reports') {
+        this.category = '';
+        return;
+      }
+      this.category = 'reports';
+    },
+
+    onClickLodgmentTag() {
+      if (this.category === 'lodgment') {
+        this.category = '';
+        return;
+      }
+      this.category = 'lodgment';
+    },
+
+    onClickShoppingTag() {
+      if (this.category === 'shopping') {
+        this.category = '';
+        return;
+      }
+      this.category = 'shopping';
+    },
+
+    onClickRestaurantTag() {
+      if (this.category === 'restaurant') {
+        this.category = '';
+        return;
+      }
+      this.category = 'restaurant';
+    },
+
     changeTypeToString(code) {
       if (code === '12') {
         return '관광지';
@@ -127,15 +374,70 @@ export default {
         return '음식점';
       }
     },
+
+    contentTypeChange(category) {
+      if (category === 'tour') {
+        this.contentType = '&contentTypeId=12';
+        return;
+      }
+      if (category === 'culture') {
+        this.contentType = '&contentTypeId=14';
+        return;
+      }
+      if (category === 'festival') {
+        this.contentType = '&contentTypeId=15';
+        return;
+      }
+      if (category === 'plan') {
+        this.contentType = '&contentTypeId=25';
+        return;
+      }
+      if (category === 'reports') {
+        this.contentType = '&contentTypeId=28';
+        return;
+      }
+      if (category === 'lodgment') {
+        this.contentType = '&contentTypeId=32';
+        return;
+      }
+      if (category === 'shopping') {
+        this.contentType = '&contentTypeId=38';
+        return;
+      }
+      if (category === 'restaurant') {
+        this.contentType = '&contentTypeId=39';
+        return;
+      }
+      this.contentType = '';
+    },
   },
-  computed: {},
+  computed: {
+    ...mapState(userStore, ['userInfo']),
+  },
   watch: {
     'mapOption.level'(cur, prev) {
       this.mapInstance.setLevel(cur);
       console.log(`[LEVEL CHANGED] ${prev} => ${cur}`);
     },
     'mapOption.center'(cur) {
-      this.mapInstance.setCenter(new kakao.maps.LatLng(cur.lat, cur.lng));
+      this.mapInstance.panTo(new kakao.maps.LatLng(cur.lat, cur.lng));
+    },
+    activePlace() {
+      setTimeout(() => {
+        window.document
+          .getElementsByClassName('place active')[0]
+          .scrollIntoView({
+            block: 'nearest',
+          });
+      }, 10);
+    },
+    category() {
+      this.contentTypeChange(this.category);
+      this.loadSearchTripData(this.keyword);
+      this.page = 1;
+      // 기존 마커들 삭제
+      this.markers.removeAll(this.markerList);
+      this.markerList = [];
     },
   },
 };
@@ -182,6 +484,46 @@ export default {
       border-bottom-right-radius: 6px;
     }
   }
+
+  .map-category {
+    position: absolute;
+    display: flex;
+    gap: 12px;
+    left: 450px;
+    top: 20px;
+    z-index: 10;
+    .tag {
+      display: flex;
+      background: #ffffff;
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+      border-radius: 36px;
+      font-size: 16px;
+      font-weight: 700;
+      padding: 6px 16px;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: #4a4a4a;
+      cursor: pointer;
+      &:hover {
+        color: black;
+      }
+      &:active {
+        background-color: #ffdaf6;
+        color: #f95374;
+      }
+
+      &.active {
+        background-color: #ffdaf6;
+        color: #f95374;
+      }
+
+      span {
+        height: 18px;
+        width: 18px;
+      }
+    }
+  }
   .map-area {
     display: flex;
     height: 100%;
@@ -198,11 +540,10 @@ export default {
       background: #fefefe;
       box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
       z-index: 10;
-      
+
       .search-area {
         position: fixed;
-        width: 380px;
-        /* width: 100%; */
+        width: 420px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -211,13 +552,20 @@ export default {
         background-color: white;
         z-index: 10;
 
+        .search-button {
+          position: absolute;
+          top: 20px;
+          right: 30px;
+          cursor: pointer;
+        }
+
         input {
           flex: 1;
           height: 44px;
           border-radius: 4px;
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2),
             0 -1px 0px rgba(0, 0, 0, 0.02);
-          /* width: 380px; */
+          padding-left: 12px;
         }
       }
 
@@ -228,7 +576,7 @@ export default {
         -ms-overflow-style: none; /* 인터넷 익스플로러 */
         scrollbar-width: none; /* 파이어폭스 */
         &::-webkit-scrollbar {
-            display: none; /* 크롬, 사파리, 오페라, 엣지 */
+          display: none; /* 크롬, 사파리, 오페라, 엣지 */
         }
         .place {
           padding: 20px 12px;
@@ -272,10 +620,60 @@ export default {
           &:active {
             background-color: rgb(166, 197, 244);
           }
+          &.active {
+            background-color: rgb(236, 255, 172);
+          }
           h4 {
             margin: 0;
           }
         }
+      }
+    }
+    .overlay-popup {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      width: 300px;
+      height: 240px;
+      background: url('@/assets/images/overlay-background.png') no-repeat;
+      background-size: 300px 240px;
+      padding: 15px 10px 55px 10px;
+      filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.35));
+
+      .overlay-image {
+        position: absolute;
+        width: 100%;
+        top: 0px;
+        left: 0px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 14px 14px 0 0;
+      }
+
+      .overlay-title {
+        position: absolute;
+        margin-left: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        top: 130px;
+      }
+
+      .overlay-address {
+        position: absolute;
+        top: 10px;
+        left: 20px;
+        font-size: 12px;
+        font-weight: 400;
+        color: #8f8f8f;
+        top: 156px;
+      }
+
+      .close {
+        color: white;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        filter: drop-shadow(3px 3px 6px #00000d);
       }
     }
   }
