@@ -26,12 +26,7 @@
         <div class="header-date">작성일</div>
         <div class="header-hit">조회수</div>
       </div>
-      <div
-        class="list-body"
-        v-for="article in articles"
-        :key="article.noticeNo"
-        @click="viewArticle"
-      >
+      <div class="list-body" v-for="article in articles" :key="article.noticeNo">
         <NoticeListItem :article="article" />
       </div>
       <div class="notice-pagination">

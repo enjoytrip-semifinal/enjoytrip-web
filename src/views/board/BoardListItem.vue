@@ -59,7 +59,7 @@ export default {
   display: flex;
   padding: 8px 0;
   font-size: 16px;
-  font-weight: 400;
+  font-weight: 500;
   border-bottom: 1px solid #8f8f8f;
   .body-no {
     flex: 1;

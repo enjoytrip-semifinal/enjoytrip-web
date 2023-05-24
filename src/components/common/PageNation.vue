@@ -15,16 +15,28 @@
 
 <script>
 import Paginate from 'vuejs-paginate';
+import { countBoard } from '../../utils/board';
 export default {
   name: 'PageNation',
   components: { Paginate },
+  props: [],
   data() {
     return {
       selectPage: 1,
-      pageCount: 10,
+      pageCount: 0,
     };
   },
-  created() {},
+  created() {
+    countBoard(
+      ({ data }) => {
+        this.pageCount = data / 10;
+      },
+      () => {
+        console.log('페이지 불러오기 실패');
+      }
+    );
+    console.log(this.totalPageNum);
+  },
   methods: {
     changePage: function (pageNum) {
       this.$emit('pageFromChild', pageNum)

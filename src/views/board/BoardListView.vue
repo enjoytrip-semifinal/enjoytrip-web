@@ -14,7 +14,13 @@
         board.content
       }}
     </div>
-    <div class="comment">댓글</div>
+    <div class="comment">
+      <p>댓글</p>
+      <div class="controll-button-area" v-if="isControll">
+        <button class="edit" @click="onClickEditBtn">수정</button>
+        <button class="delete" @click="onClickDeleteBtn">삭제</button>
+      </div>
+    </div>
     <div class="comment-num">총 2개</div>
     <div v-if="!isInput" class="comment-input-area" @click="onClickComment">
       <img src="@/assets/images/comment.png" alt="" />
@@ -26,6 +32,7 @@
         class="input-textarea"
         v-if="isInput"
         placeholder="댓글을 입력하세요."
+        v-model="comment.content"
       />
       <div class="comment-bottom">
         <div class="button-mode-area">
@@ -34,22 +41,43 @@
         </div>
         <div class="button-submit-area">
           <a @click="onClickCommentCalcel" class="cancel-button">취소</a>
-          <a>등록</a>
+          <a @click="onClickCommentRegister">등록</a>
         </div>
       </div>
     </div>
     <div class="comment-content-area">
       <div
         class="commnet-content"
-        v-for="comment in comments"
-        :key="comment.userid"
+        v-for="(comment, index) in comments"
+        :key="comment.board_reply_id"
       >
         <div class="comment-header">
-          <div class="name">{{ comment.userid }}</div>
-          <div class="comment-time">{{ comment.time }}</div>
+          <div class="comment-title-area">
+            <div class="name">{{ comment.user_id }}</div>
+            <div class="comment-time">{{ comment.register_date }}</div>
+          </div>
+          <div class="comment-controller-area" v-if="comment.board_reply_id != targetComment.board_reply_id || !editMode">
+            <button @click="onClickCommentEditBtn(comment)"><span class="material-symbols-outlined">
+edit
+</span></button>
+            <button @click="onClickCommentDeleteBtn(comment)"><span class="material-symbols-outlined">
+delete
+</span></button>
+
+          </div>
+          <div class="comment-controller-area" v-if="comment.board_reply_id == targetComment.board_reply_id && editMode">
+            <button @click="onClickCommentDoneBtn(index)"><span class="material-symbols-outlined">
+done
+</span></button>
+            <button @click="onClickEditCancelBtn"><span class="material-symbols-outlined">
+close
+</span></button>
+
+          </div>
         </div>
         <div class="comment-body">
-          <div class="commment-content">{{ comment.content }}</div>
+          <div v-if="comment.board_reply_id != targetComment.board_reply_id || !editMode" class="commment-content">{{ comment.content }}</div>
+          <input class="edit-input" v-if="comment.board_reply_id == targetComment.board_reply_id && editMode"  v-model="targetComment.content" />
         </div>
       </div>
     </div>
@@ -65,50 +93,48 @@
 </template>
 
 <script>
-import { viewBoard } from '../../utils/board';
+import { viewBoard, deleteBoard, listComment, writeComment, modifyComment, deleteComment } from '../../utils/board';
+import { mapState } from 'vuex';
+
+const userStore = 'userStore';
+
 export default {
   name: 'TripBoardListView',
   components: {},
   data() {
     return {
       board: {},
-      comments: [
-        {
-          userid: '1',
-          time: '2022-05-03',
-          content: '정말 최고다!',
-        },
-        {
-          userid: '2',
-          time: '2022-05-03',
-          content: '정말 최고다!',
-        },
-        {
-          userid: '3',
-          time: '2022-05-03',
-          content: '정말 최고다!',
-        },
-        {
-          userid: '4',
-          time: '2022-05-03',
-          content: '정말 최고다!',
-        },
-        {
-          userid: '5',
-          time: '2022-05-03',
-          content: '정말 최고다!',
-        },
-        {
-          userid: '6',
-          time: '2022-05-03',
-          content: '정말 최고다!',
-        },
-      ],
-      isInput: false,
+      comments: [],
+      comment: {
+        board_id: 0,
+        content: "",
+        user_id: 0
+      },
+      isInput: false, 
+      isControll: false,
+      commentParam: {
+        pgno: 1,
+        id: '',
+      },
+      targetComment: {
+        board_id: 0,
+        board_reply_id: 0,
+        content: "",
+        user_id: 0,
+      },
+      editMode: false,
     };
   },
+  computed: {
+    ...mapState(userStore, ['userInfo']),
+  },  
   created() {
     this.loadView();
+    this.comment.user_id = this.userInfo.user_id;
+    // 로그인 되어있는 아이디와 게시글 아이디 비교
+    this.isControll = this.userInfo.user_id === this.board.user_id;
+    console.log(this.targetComment);
+    this.targetComment.user_id = this.userInfo.user_id;
   },
   methods: {
     onClickComment() {
@@ -117,6 +143,15 @@ export default {
     onClickCommentCalcel() {
       this.isInput = false;
     },
+    onClickCommentRegister() {
+      writeComment(this.comment, () => {
+        alert('댓글 등록!');
+        this.isInput = false;
+        this.loadComment();
+      }, () => {
+        alert('댓글 등록에 실패했습니다.')
+      })
+    },
     onClickListButton() {
       this.$router.go(-1);
     },
@@ -124,12 +159,84 @@ export default {
       viewBoard(this.$route.fullPath.split('list/')[1],
         ({ data }) => {
           this.board = data.board;
+          this.commentParam.id = data.board.board_id;
+          this.comment.board_id = data.board.board_id;
+          this.targetComment.board_id = this.board.board_id;
           console.log(this.board);
+          this.isControll = Number(this.userInfo.user_id) === Number(this.board.user_id);
+          this.loadComment();
         },
         () => {
           console.log('게시글 불러오기 실패');
         }
       );
+    },
+    loadComment() {
+      listComment(
+        this.commentParam,
+        ({ data }) => {
+          console.log('[commnet]',data.reviewList
+);
+          this.comments = data.reviewList
+;
+        },
+        () => {
+          console.log('댓글 불러오기 실패!');
+        }
+      )
+    },
+    onClickEditBtn() {
+      this.$router.push(`/board/edit/${this.board.board_id}`);
+    },
+    onClickDeleteBtn() {
+      deleteBoard(this.board.board_id, () => { 
+        alert('게시글이 삭제되었습니다.');
+        this.$router.go(-1);
+      },
+        () => {
+          alert('게시글 삭제에 실패했습니다.');
+          this.$router.go(-1);
+      });
+    },
+    onClickCommentEditBtn(comment) {
+      this.targetComment.board_reply_id = comment.board_reply_id;
+      this.targetComment.content = comment.content;
+      this.editMode = true;
+    },
+    onClickCommentDeleteBtn(comment) {
+      this.targetComment.board_reply_id = comment.board_reply_id;
+      this.targetComment.content = comment.content;
+      deleteComment(
+        this.targetComment.board_reply_id,
+        () => {
+          console.log(this.targetComment);
+          alert('댓글이 삭제되었습니다.');
+          this.loadComment();
+        },
+        () => {
+          alert('댓글 삭제에 실패했습니다.');
+        }
+      )
+    },
+    onClickCommentDoneBtn(index) {
+      modifyComment(
+        this.targetComment,
+        () => {
+          let temp = [...this.comments];
+          for (let item in this.targetComment) {
+            temp[index][item] = this.targetComment[item];
+          }
+          this.comments = temp;
+          this.editMode = false;
+        },
+        () => {
+          alert('댓글 수정에 실패했습니다.');
+        }
+      )
+    },
+
+    onClickEditCancelBtn() {
+      this.editMode = false;
     }
   },
 };
@@ -179,8 +286,29 @@ export default {
     padding-bottom: 60px;
   }
   .comment {
+    display: flex;
     font-size: 28px;
     font-weight: 700;
+    justify-content: space-between;
+
+    .controll-button-area {
+      display: flex;
+      gap: 6px;
+      button {
+        padding: 8px 16px;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 4px;
+      }
+      .edit {
+        background-color: #8d8d8d;
+        color: white;
+      }
+      .delete {
+        background-color: #fc4444;
+        color: white;
+      }
+    }
   }
 
   .comment-num {
@@ -277,6 +405,7 @@ export default {
         display: flex;
         gap: 12px;
         align-items: center;
+        justify-content: space-between;
         .name {
           font-size: 20px;
           font-weight: 600;
@@ -286,12 +415,26 @@ export default {
           font-weight: 500;
           color: #b7b7b7;
         }
+        .comment-controller-area {
+          display: flex;
+          gap: 6px;
+          button {
+            background-color: white;
+            cursor: pointer;
+          }
+        }
       }
       .comment-body {
         margin-top: 12px;
         margin-bottom: 20px;
         font-size: 14px;
         font-weight: 400;
+        
+        .edit-input {
+          width: 100%;
+          border: 1px solid #bbb;
+          padding: 10px;
+        }
       }
     }
   }

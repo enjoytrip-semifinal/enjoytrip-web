@@ -62,6 +62,7 @@ export default {
         key: "",
         word: "",
       },
+      totalPageNum: 0,
     };
   },
   created() {

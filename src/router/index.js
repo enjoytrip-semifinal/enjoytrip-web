@@ -20,6 +20,7 @@ import TripNoticeListView from "@/views/notice/NoticeListView";
 import MyPageMain from '@/views/mypage/MyPageMain';
 import MyPageReview from '@/views/mypage/MyPageReview';
 import MyPageEdit from '@/views/mypage/MyPageEdit';
+import TripBoardEdit from "@/views/board/BoardEdit"
 
 Vue.use(VueRouter);
 
@@ -49,6 +50,11 @@ const routes = [
         path: "write",
         name: "boardWrite",
         component: TripBoardWrite,
+      },
+      {
+        path: "edit/:id",
+        name: "boardEdit",
+        component: TripBoardEdit,
       },
     ],
   },
