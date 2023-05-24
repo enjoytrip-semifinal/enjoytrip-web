@@ -93,7 +93,7 @@ export default {
       margin-top: 40px;
       margin-bottom: 160px;
       .box {
-        width: 480px;
+        width: 504px;
         height: 54px;
         border: 1px solid #d1d1d1;
         border-radius: 4px;

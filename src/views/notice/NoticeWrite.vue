@@ -59,7 +59,6 @@ export default {
       article: {
         title: '',
         content: '',
-        hit: 0,
         user_id: 0,
       },
     };

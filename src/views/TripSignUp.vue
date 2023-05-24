@@ -359,7 +359,7 @@ export default {
             font-weight: 500;
           }
           .address-input-area {
-            width: 492px;
+            width: 480px;
             height: 48px;
             border: 1px solid #d1d1d1;
             border-radius: 4px;

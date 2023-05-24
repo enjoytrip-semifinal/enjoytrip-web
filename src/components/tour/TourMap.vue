@@ -74,6 +74,33 @@
         <div class="name">음식점</div>
       </div>
     </div>
+    <div class="tour-plan-button" @click="onClickPlanBtn()">
+      <span class="material-symbols-outlined">
+        distance
+      </span>
+    </div>
+    <div class="tour-plan-sidebar" :class="{active: isPlanShow}">
+      <h3 class="plan-title">여행 계획</h3>
+      <div class="close-button" @click="onClickSidebarCloseBtn()"><span class="material-symbols-outlined">
+chevron_right
+</span></div>
+      <div class="plans">
+        <div
+            class="plan"
+            v-for="(plan, index) in planList"
+            :key="index"
+          >
+          <span class="material-symbols-outlined">
+            close
+          </span>
+            <img :src="plan.firstimage" alt="" />
+            <div class="top-section">
+              <h4 class="title">{{ plan.title }}</h4>
+              <p class="address">{{ plan.addr1 + ' ' + plan.addr2 }}</p>
+            </div>
+          </div>
+      </div>
+    </div>
     <div class="map-area">
       <div class="sidebar-container">
         <div class="search-area">
@@ -100,7 +127,10 @@
               <h4 class="title">{{ place.title }}</h4>
               <p class="type">{{ changeTypeToString(place.contenttypeid) }}</p>
             </div>
-            <p class="address">{{ place.addr1 + ' ' + place.addr2 }}</p>
+            <div class="bottom-section">
+              <p class="address">{{ place.addr1 + ' ' + place.addr2 }}</p>
+              <div class="add-plan" @click="onClickPlanAddBtn(place)">내 계획에 담기</div>
+            </div>
           </div>
           <infinite-loading :identifier="keyword" @infinite="infiniteHandler">
             <template #no-more>
@@ -161,6 +191,8 @@ export default {
       keyword: '구미', // 타겟 검색어
       category: '', // 현재 카테고리
       contentType: '',
+      isPlanShow: false,
+      planList: [], // 내 여행계획 리스트
     };
   },
 
@@ -410,6 +442,15 @@ export default {
       }
       this.contentType = '';
     },
+    onClickPlanBtn() {
+      this.isPlanShow = true
+    },
+    onClickSidebarCloseBtn() {
+      this.isPlanShow = false
+    },
+    onClickPlanAddBtn(place) {
+      this.planList.push(place);
+    },
   },
   computed: {
     ...mapState(userStore, ['userInfo']),
@@ -447,6 +488,7 @@ export default {
 .map-container {
   position: relative;
   flex: 1;
+  overflow: hidden;
   .controller {
     position: absolute;
     right: 20px;
@@ -524,6 +566,145 @@ export default {
       }
     }
   }
+
+  .tour-plan-button {
+    display: flex;
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    z-index: 10;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: white;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    margin: 10px;
+    color: #4a4a4a;
+
+    &:hover {
+      color: black;
+    }
+
+    &:active {
+      color: black;
+      background-color: #ddd;
+    }
+
+    .material-symbols-outlined {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-variation-settings:
+      'FILL' 1,
+      'wght' 800,
+      'GRAD' 100,
+      'opsz' 48
+    }
+  }
+
+  .tour-plan-sidebar {
+    position: absolute;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    transform: translatex(110%);
+    transition: transform 0.4s ease-in-out;
+    width: 400px;
+    height: 100%;
+    background-color: white;
+    z-index: 10;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+    background-color: #eee;
+
+    &.active {
+      transform: translateX(0px);
+    }
+    
+    .plan-title {
+      display: flex;
+      font-size: 24px;
+      font-weight: 700;
+      align-items: center;
+      justify-content: center;
+      margin-top: 24px;
+      margin-bottom: 24px;
+    }
+
+    .close-button {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 0px;
+      top: 50%;
+      left: -24px;
+      background-color: white;
+      border-radius: 4px 0px 0px 4px ;
+      cursor: pointer;
+      box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.25);
+    }
+
+    .plans {
+      display: flex;
+      flex-direction: column;
+      border-radius: 4px;
+      margin: 0 12px;
+      gap: 12px;
+      height: 100%;
+      overflow: scroll;
+      -ms-overflow-style: none; /* 인터넷 익스플로러 */
+        scrollbar-width: none; /* 파이어폭스 */
+        &::-webkit-scrollbar {
+          display: none; /* 크롬, 사파리, 오페라, 엣지 */
+        }
+
+      .plan {
+        position: relative;
+        display: flex;
+        height: 160px;
+        background-color: white;
+        border-radius: 4px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+
+        .material-symbols-outlined {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+        }
+
+        img {
+          width: 160px;
+          height: 160px;
+          object-fit: cover;
+          justify-self: flex-start;
+          border-radius: 4px 0 0 4px;
+        }
+      }
+
+      .top-section {
+        display: flex;
+        flex-direction: column;
+        margin-left: 10px;
+        .title {
+          font-size: 14px;
+          font-weight: 600;
+          margin-top: 20px;
+          max-width: 166px;
+        }
+
+        .address {
+          font-size: 12px;
+          color: #8f8f8f;
+          font-weight: 500;
+          margin-top: 4px;
+        }
+      }
+    }
+  }
+
   .map-area {
     display: flex;
     height: 100%;
@@ -608,11 +789,25 @@ export default {
             }
           }
 
-          .address {
-            font-size: 12px;
-            font-weight: 500;
-            margin-top: 4px;
+          .bottom-section {
+            display: flex;
+            justify-content: space-between;
+            .address {
+              font-size: 12px;
+              font-weight: 500;
+              margin-top: 4px;
+            }
+            .add-plan {
+              font-size: 12px;
+              font-weight: 400;
+              color: #cccccc;
+              &:hover {
+                color: black;
+              }
+            }
           }
+
+          
           &:hover {
             background-color: aliceblue;
             cursor: pointer;
@@ -626,6 +821,8 @@ export default {
           h4 {
             margin: 0;
           }
+
+          
         }
       }
     }
