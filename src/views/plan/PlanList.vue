@@ -1,12 +1,12 @@
 <template>
   <div class="plan-container">
-    <router-view></router-view>
+    <div class="title">여행 계획</div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'TripPlan',
+  name: 'TripPlanList',
   components: {},
   data() {
     return {
@@ -18,10 +18,4 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
-.plan-container {
-  padding-top: 100px;
-  display: flex;
-  justify-content: center;
-}
-</style>
+<style scoped></style>

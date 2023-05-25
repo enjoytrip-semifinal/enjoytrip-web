@@ -24,6 +24,7 @@ export default {
 .place-container {
   min-height: calc(100vh - 100px);
   padding-top: 100px;
+  margin-bottom: 30px;
   display: flex;
   .trip-place-container {
     display: flex;

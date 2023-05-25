@@ -20,8 +20,9 @@ export default {
 
 <style scoped lang="scss">
 .board-root {
-  min-height: calc(100vh - 100px);
+  min-height: calc(100vh);
   padding-top: 100px;
+  margin-bottom: 30px;
   display: flex;
   .trip-board-container {
     display: flex;

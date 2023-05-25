@@ -40,7 +40,7 @@
                       {{ item.name }}
                     </option>
                   </select>
-                <span class="icoArrow"
+                  <span class="icoArrow"
                     ><img src="@/assets/images/arrow-down.png" alt=""
                   /></span>
                 </div>
@@ -59,7 +59,7 @@
                       {{ item.name }}
                     </option>
                   </select>
-                <span class="icoArrow"
+                  <span class="icoArrow"
                     ><img src="@/assets/images/arrow-down.png" alt=""
                   /></span>
                 </div>
@@ -83,13 +83,18 @@
 
               <div class="content-area input-line">
                 <label for="content">내용</label>
-                <textarea v-model="place.content" id="content"
-                class="content-input"
-                  placeholder="장소에 대한 설명을 50자 이내로 설명해주세요."/>
+                <textarea
+                  v-model="place.content"
+                  id="content"
+                  class="content-input"
+                  placeholder="장소에 대한 설명을 50자 이내로 설명해주세요."
+                />
               </div>
 
               <div class="button-section">
-                <button class="upload-button" @click.prevent="onClickSubmitBtn">등록</button>
+                <button class="upload-button" @click.prevent="onClickSubmitBtn">
+                  등록
+                </button>
                 <button class="cancel-button" @click.prevent="onClickCancelBtn">
                   취소
                 </button>
@@ -161,8 +166,8 @@ export default {
     };
   },
 
-  created() { },
-  
+  created() {},
+
   mounted() {
     const container = this.$refs.map;
     kakao = kakao || window.kakao;
@@ -274,7 +279,6 @@ export default {
 
     // 주소-좌표 변환 메서드
     changeAddressToCoordinate() {
-
       if (!this.geocoderInstance) {
         this.geocoderInstance = new kakao.maps.services.Geocoder();
       }
@@ -284,41 +288,48 @@ export default {
         this.markerInstance = null;
       }
 
-      this.geocoderInstance.addressSearch(`${this.place.address} ${this.place.extraAddress}`, (result, status) => {
+      this.geocoderInstance.addressSearch(
+        `${this.place.address} ${this.place.extraAddress}`,
+        (result, status) => {
+          console.log(
+            '[현재 주소]',
+            `${this.place.address} ${this.place.extraAddress}`
+          );
+          console.log(result);
 
-        console.log('[현재 주소]', `${this.place.address} ${this.place.extraAddress}`);
-        console.log(result);
+          // 정상적으로 검색이 완료됐으면
+          if (status === kakao.maps.services.Status.OK) {
+            let coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+            console.log('[coords]', coords);
 
-      // 정상적으로 검색이 완료됐으면 
-      if (status === kakao.maps.services.Status.OK) {
+            // 결과값으로 받은 위치를 마커로 표시합니다
+            this.markerInstance = new kakao.maps.Marker({
+              map: this.mapInstance,
+              position: coords,
+            });
 
-        let coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-        console.log('[coords]', coords);
+            this.markerInstance.setMap(this.mapInstance);
+            this.markerInstance.setDraggable(true);
 
-        // 결과값으로 받은 위치를 마커로 표시합니다
-        this.markerInstance = new kakao.maps.Marker({
-            map: this.mapInstance,
-            position: coords
-        });
+            kakao.maps.event.addListener(this.markerInstance, 'dragend', () => {
+              // 마커 이동 종료 후 주소 반환
+              // 현재 마커 좌표로 주소를 검색해서 주소창에 표시합니다
+              this.searchAddrFromCoords(
+                this.markerInstance.getPosition(),
+                (data) => {
+                  console.log(data[0].address.address_name);
+                  this.place.address = data[0].address.address_name;
+                  this.place.extraAddress = '';
+                }
+              );
+            });
 
-        this.markerInstance.setMap(this.mapInstance);
-        this.markerInstance.setDraggable(true); 
-
-        kakao.maps.event.addListener(this.markerInstance, 'dragend', () => {
-          // 마커 이동 종료 후 주소 반환
-          // 현재 마커 좌표로 주소를 검색해서 주소창에 표시합니다
-          this.searchAddrFromCoords(this.markerInstance.getPosition(), (data) => {
-            console.log(data[0].address.address_name);
-            this.place.address = data[0].address.address_name;
-            this.place.extraAddress = '';
-          });
-        });
-
-        console.log('[coords2]', coords);
-        // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
-        this.mapInstance.setCenter(coords);
-      } 
-      });    
+            console.log('[coords2]', coords);
+            // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+            this.mapInstance.setCenter(coords);
+          }
+        }
+      );
     },
 
     searchAddrFromCoords(coords, callback) {
@@ -326,7 +337,11 @@ export default {
         this.geocoderInstance = new kakao.maps.services.Geocoder();
       }
       // 좌표로 행정동 주소 정보를 요청합니다
-      this.geocoderInstance.coord2Address(coords.getLng(), coords.getLat(), callback);
+      this.geocoderInstance.coord2Address(
+        coords.getLng(),
+        coords.getLat(),
+        callback
+      );
     },
 
     // 지도 좌측상단에 지도 중심좌표에 대한 주소정보를 표출하는 함수입니다
@@ -335,15 +350,15 @@ export default {
 
       if (status === kakao.maps.services.Status.OK) {
         console.log('inisds');
-          for(let i = 0; i < result.length; i++) {
-              // 행정동의 region_type 값은 'H' 이므로
-                console.log('[주소]', result[i].address_name);
-                this.place.address = result[i].address_name;
-                this.place.extraAddress = '';
-                break;
-          }
-      }    
-    }
+        for (let i = 0; i < result.length; i++) {
+          // 행정동의 region_type 값은 'H' 이므로
+          console.log('[주소]', result[i].address_name);
+          this.place.address = result[i].address_name;
+          this.place.extraAddress = '';
+          break;
+        }
+      }
+    },
   },
 
   watch: {
@@ -351,7 +366,7 @@ export default {
       this.place.type = this.changeStringToType(this.selected);
     },
 
-    selected2: function() {
+    selected2: function () {
       console.log('변경!!');
       this.place.seasonType = this.changeSeasonToType(this.selected2);
     },
@@ -391,8 +406,7 @@ export default {
 
       .map {
         width: 700px;
-        height: 100%;
-        background-color: aqua;
+        height: 760px;
       }
       .input-area {
         width: 400px;
@@ -480,35 +494,35 @@ export default {
               }
 
               .content-input {
-        border-radius: 8px;
-        height: 120px;
-        font-size: 18px;
-        font-weight: 700;
-        padding: 10px;
-        resize: none;
-        border: 1px solid #bdbdbd;
-      }
+                border-radius: 8px;
+                height: 120px;
+                font-size: 18px;
+                font-weight: 700;
+                padding: 10px;
+                resize: none;
+                border: 1px solid #bdbdbd;
+              }
 
               .file-top {
                 display: flex;
-          gap: 8px;
-          align-items: center;
-          .file-button-area {
-                display: flex;
                 gap: 8px;
                 align-items: center;
-                margin-left: auto;
-                button {
-                  color: white;
-                  background-color: #8f8f8f;
-                  border-radius: 8px;
-                  font-size: 14px;
-                  font-weight: 600;
-                  text-align: center;
-                  padding: 4px 16px;
-                  cursor: pointer;
+                .file-button-area {
+                  display: flex;
+                  gap: 8px;
+                  align-items: center;
+                  margin-left: auto;
+                  button {
+                    color: white;
+                    background-color: #8f8f8f;
+                    border-radius: 8px;
+                    font-size: 14px;
+                    font-weight: 600;
+                    text-align: center;
+                    padding: 4px 16px;
+                    cursor: pointer;
+                  }
                 }
-              }
               }
             }
           }
@@ -516,31 +530,31 @@ export default {
       }
 
       .button-section {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      margin-top: 16px;
-      gap: 16px;
-      button {
-        width: 100px;
-        height: 44px;
-        text-align: center;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 20px;
-        font-weight: 700;
-        margin-bottom: 32px;
-      }
-      .upload-button {
-        background-color: #ff8080;
-        color: white;
-      }
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        margin-top: 16px;
+        gap: 16px;
+        button {
+          width: 100px;
+          height: 44px;
+          text-align: center;
+          border-radius: 8px;
+          cursor: pointer;
+          font-size: 20px;
+          font-weight: 700;
+          margin-bottom: 32px;
+        }
+        .upload-button {
+          background-color: #ff8080;
+          color: white;
+        }
 
-      .cancel-button {
-        background-color: #707070;
-        color: white;
+        .cancel-button {
+          background-color: #707070;
+          color: white;
+        }
       }
-    }
     }
   }
 }
