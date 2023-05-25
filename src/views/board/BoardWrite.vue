@@ -37,8 +37,12 @@
         />
       </div>
       <div class="button-section">
-        <button class="upload-button" @click.prevent="onClickSubmitBtn">등록</button>
-        <button class="cancel-button" @click.prevent="onClickCancelBtn">취소</button>
+        <button class="upload-button" @click.prevent="onClickSubmitBtn">
+          등록
+        </button>
+        <button class="cancel-button" @click.prevent="onClickCancelBtn">
+          취소
+        </button>
       </div>
     </form>
   </div>
@@ -81,10 +85,14 @@ export default {
       let err = true;
       let msg = "";
       !this.board.title &&
-        ((msg = "제목을 입력해주세요"), (err = false), this.$refs["write-title"].focus());
+        ((msg = "제목을 입력해주세요"),
+        (err = false),
+        this.$refs["write-title"].focus());
       err &&
         !this.board.content &&
-        ((msg = "내용을 입력해주세요"), (err = false), this.$refs["write-content"].focus());
+        ((msg = "내용을 입력해주세요"),
+        (err = false),
+        this.$refs["write-content"].focus());
 
       if (!err) {
         alert(msg);
@@ -116,9 +124,10 @@ export default {
     registerFile() {
       let fileNameSlice = this.$refs.file.files[0].name.split(".");
       console.log("[file]", this.$refs.file.files[0]);
-      this.photoKey = fileNameSlice[0] + "_" + new Date().getTime() + "." + fileNameSlice[1];
+      this.photoKey =
+        fileNameSlice[0] + "_" + new Date().getTime() + "." + fileNameSlice[1];
       this.board.fileInfos.push(this.photoKey);
-      console.log(this.board.fileInfos);
+      console.log("[fileInfo]", this.board.fileInfos);
     },
     uploadFile() {
       AWS.config.update({

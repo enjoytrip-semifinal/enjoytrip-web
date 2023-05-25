@@ -29,18 +29,18 @@
 
 <script>
 export default {
-  name: 'PlaceCard',
+  name: "PlaceCard",
   components: {},
-  props: ['imgUrl', 'type'],
+  props: ["imgUrl", "type", "content", "address"],
   data() {
     return {
       smallSize: {
-        width: '294px',
-        height: '294px',
+        width: "294px",
+        height: "294px",
       },
       mediumSize: {
-        width: '424px',
-        height: '424px',
+        width: "424px",
+        height: "424px",
       },
     };
   },
@@ -48,7 +48,7 @@ export default {
   methods: {},
   computed: {
     size: function () {
-      if (this.type === 's') {
+      if (this.type === "s") {
         return this.smallSize;
       }
       return this.mediumSize;
@@ -62,7 +62,7 @@ export default {
   display: flex;
   height: 424px;
   width: 424px;
-  border-radius: 24px;
+
   cursor: pointer;
   img {
     transition-duration: 0.25s;
@@ -78,6 +78,7 @@ export default {
     align-items: center;
     color: rgba($color: #ffffff, $alpha: 0);
     transition-duration: 0.25s;
+    border-radius: 24px;
 
     .like {
       position: absolute;

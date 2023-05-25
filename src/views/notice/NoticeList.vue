@@ -4,17 +4,36 @@
     <div class="top-line">
       <div class="search-line">
         <div class="selectBox">
-          <select name="search" class="select" :value="selected" @change="setSelect($event)">
-            <option v-for="item in selectList" :key="item.value">{{ item.name }}</option>
+          <select
+            name="search"
+            class="select"
+            :value="selected"
+            @change="setSelect($event)"
+          >
+            <option v-for="item in selectList" :key="item.value">
+              {{ item.name }}
+            </option>
           </select>
-          <span class="icoArrow"><img src="@/assets/images/arrow-down.png" alt="" /></span>
+          <span class="icoArrow"
+            ><img src="@/assets/images/arrow-down.png" alt=""
+          /></span>
         </div>
         <div class="search-bar">
-          <input type="text" placeholder="검색어를 입력해주세요." v-model="searchInput" />
-          <span class="icoSearch"><img src="@/assets/images/search.png" alt="" /></span>
+          <input
+            type="text"
+            placeholder="검색어를 입력해주세요."
+            v-model="searchInput"
+          />
+          <span class="icoSearch" @click="onClickSearch"
+            ><img src="@/assets/images/search.png" alt=""
+          /></span>
         </div>
       </div>
-      <button v-if="userInfo.roles[0] === 'ADMIN'" class="write-button" @click="onClickWriteBtn">
+      <button
+        v-if="userInfo.roles[0] === 'ADMIN'"
+        class="write-button"
+        @click="onClickWriteBtn"
+      >
         글쓰기
       </button>
     </div>
@@ -26,7 +45,11 @@
         <div class="header-date">작성일</div>
         <div class="header-hit">조회수</div>
       </div>
-      <div class="list-body" v-for="article in articles" :key="article.noticeNo">
+      <div
+        class="list-body"
+        v-for="article in articles"
+        :key="article.noticeNo"
+      >
         <NoticeListItem :article="article" />
       </div>
       <div class="notice-pagination">

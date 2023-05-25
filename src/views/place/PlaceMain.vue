@@ -29,36 +29,32 @@
       <PlaceCardVue :imgUrl="imgUrl[0]" :type="'s'" />
       <PlaceCardVue :imgUrl="imgUrl[1]" :type="'s'" />
       <PlaceCardVue :imgUrl="imgUrl[2]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[0]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[0]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[1]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[2]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[0]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[0]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[1]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[2]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[0]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[0]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[1]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[2]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[0]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[0]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[1]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[2]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[0]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[0]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[1]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[2]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[0]" :type="'s'" />
+      <PlaceCardVue :imgUrl="imgUrl[3]" :type="'s'" />
+      <PlaceCardVue :imgUrl="imgUrl[4]" :type="'s'" />
+      <PlaceCardVue :imgUrl="imgUrl[5]" :type="'s'" />
+      <PlaceCardVue :imgUrl="imgUrl[6]" :type="'s'" />
+      <PlaceCardVue :imgUrl="imgUrl[7]" :type="'s'" />
+      <PlaceCardVue :imgUrl="imgUrl[8]" :type="'s'" />
+      <PlaceCardVue :imgUrl="imgUrl[9]" :type="'s'" />
+      <PlaceCardVue :imgUrl="imgUrl[10]" :type="'s'" />
+      <PlaceCardVue :imgUrl="imgUrl[11]" :type="'s'" />
+      <PlaceCardVue :imgUrl="imgUrl[12]" :type="'s'" />
+      <PlaceCardVue :imgUrl="imgUrl[13]" :type="'s'" />
+      <PlaceCardVue :imgUrl="imgUrl[14]" :type="'s'" />
+      <PlaceCardVue :imgUrl="imgUrl[15]" :type="'s'" />
+      <PlaceCardVue :imgUrl="imgUrl[16]" :type="'s'" />
+      <PlaceCardVue :imgUrl="imgUrl[17]" :type="'s'" />
+      <PlaceCardVue :imgUrl="imgUrl[18]" :type="'s'" />
+      <PlaceCardVue :imgUrl="imgUrl[19]" :type="'s'" />
     </div>
   </div>
 </template>
 
 <script>
-import PlaceCardVue from '@/components/home/PlaceCard.vue';
-import { listHotPlace } from '@/utils/place';
+import PlaceCardVue from "@/components/home/PlaceCard.vue";
+import { listHotPlace } from "@/utils/place";
 export default {
-  name: 'TripPlaceMain',
+  name: "TripPlaceMain",
   components: {
     PlaceCardVue,
   },
@@ -66,16 +62,33 @@ export default {
     return {
       param: {
         pgno: 1,
-        sido: '',
-        gugun: '',
-        type: '',
-        season: '',
+        sido: "",
+        gugun: "",
+        type: "",
+        season: "",
       },
       hotPlaces: [],
       imgUrl: [
-        require('@/assets/images/test1.png'),
-        require('@/assets/images/test2.png'),
-        require('@/assets/images/test3.png'),
+        require("@/assets/images/KakaoTalk_20230526_014027246.jpg"),
+        require("@/assets/images/KakaoTalk_20230526_014027246_01.jpg"),
+        require("@/assets/images/KakaoTalk_20230526_014027246_02.jpg"),
+        require("@/assets/images/KakaoTalk_20230526_014027246_03.jpg"),
+        require("@/assets/images/KakaoTalk_20230526_014027246_04.jpg"),
+        require("@/assets/images/KakaoTalk_20230526_014027246_05.jpg"),
+        require("@/assets/images/KakaoTalk_20230526_014027246_06.jpg"),
+        require("@/assets/images/KakaoTalk_20230526_014027246_07.jpg"),
+        require("@/assets/images/KakaoTalk_20230526_014027246_08.jpg"),
+        require("@/assets/images/KakaoTalk_20230526_014027246_09.jpg"),
+        require("@/assets/images/KakaoTalk_20230526_014027246_10.jpg"),
+        require("@/assets/images/KakaoTalk_20230526_014027246_11.jpg"),
+        require("@/assets/images/KakaoTalk_20230526_014027246_12.jpg"),
+        require("@/assets/images/KakaoTalk_20230526_014027246_13.jpg"),
+        require("@/assets/images/KakaoTalk_20230526_014027246_14.jpg"),
+        require("@/assets/images/KakaoTalk_20230526_014027246_15.jpg"),
+        require("@/assets/images/KakaoTalk_20230526_014027246_16.jpg"),
+        require("@/assets/images/KakaoTalk_20230526_014027246_17.jpg"),
+        require("@/assets/images/KakaoTalk_20230526_014027246_18.jpg"),
+        require("@/assets/images/KakaoTalk_20230526_014027246_19.jpg"),
       ],
     };
   },
@@ -84,13 +97,13 @@ export default {
   },
   methods: {
     onClickRegisterBtn() {
-      this.$router.push('/place/write');
+      this.$router.push("/place/write");
     },
     loadHotPlace() {
       listHotPlace(
         this.param,
         ({ data }) => {
-          console.log('[data]', data);
+          console.log("[data]", data);
           this.articles = data.bordList;
         },
         (error) => {

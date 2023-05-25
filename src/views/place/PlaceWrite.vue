@@ -41,7 +41,9 @@
                       {{ item.name }}
                     </option>
                   </select>
-                  <span class="icoArrow"><img src="@/assets/images/arrow-down.png" alt="" /></span>
+                  <span class="icoArrow"
+                    ><img src="@/assets/images/arrow-down.png" alt=""
+                  /></span>
                 </div>
               </div>
 
@@ -59,7 +61,9 @@
                       {{ item.name }}
                     </option>
                   </select>
-                  <span class="icoArrow"><img src="@/assets/images/arrow-down.png" alt="" /></span>
+                  <span class="icoArrow"
+                    ><img src="@/assets/images/arrow-down.png" alt=""
+                  /></span>
                 </div>
               </div>
 
@@ -93,8 +97,12 @@
               </div>
 
               <div class="button-section">
-                <button class="upload-button" @click.prevent="onClickSubmitBtn">등록</button>
-                <button class="cancel-button" @click.prevent="onClickCancelBtn">취소</button>
+                <button class="upload-button" @click.prevent="onClickSubmitBtn">
+                  등록
+                </button>
+                <button class="cancel-button" @click.prevent="onClickCancelBtn">
+                  취소
+                </button>
               </div>
             </div>
           </form>
@@ -126,13 +134,13 @@ export default {
         level: 3,
       },
       place: {
-        name: "",
+        title: "",
         type: 0,
-        seasonType: 0,
+        season: 0,
         content: "",
         address: "",
         extraAddress: "",
-        fileInfos: [],
+        fileList: [],
       },
       selectList: [
         { name: "유형을 선택해주세요.", value: "" },
@@ -203,7 +211,9 @@ export default {
             // 건물명이 있고, 공동주택일 경우 추가한다.
             if (data.buildingName !== "" && data.apartment === "Y") {
               this.place.extraAddress +=
-                this.place.extraAddress !== "" ? `, ${data.buildingName}` : data.buildingName;
+                this.place.extraAddress !== ""
+                  ? `, ${data.buildingName}`
+                  : data.buildingName;
             }
             // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
             if (this.place.extraAddress !== "") {
@@ -288,7 +298,10 @@ export default {
       this.geocoderInstance.addressSearch(
         `${this.place.address} ${this.place.extraAddress}`,
         (result, status) => {
-          console.log("[현재 주소]", `${this.place.address} ${this.place.extraAddress}`);
+          console.log(
+            "[현재 주소]",
+            `${this.place.address} ${this.place.extraAddress}`
+          );
           console.log(result);
 
           // 정상적으로 검색이 완료됐으면
@@ -308,11 +321,14 @@ export default {
             kakao.maps.event.addListener(this.markerInstance, "dragend", () => {
               // 마커 이동 종료 후 주소 반환
               // 현재 마커 좌표로 주소를 검색해서 주소창에 표시합니다
-              this.searchAddrFromCoords(this.markerInstance.getPosition(), (data) => {
-                console.log(data[0].address.address_name);
-                this.place.address = data[0].address.address_name;
-                this.place.extraAddress = "";
-              });
+              this.searchAddrFromCoords(
+                this.markerInstance.getPosition(),
+                (data) => {
+                  console.log(data[0].address.address_name);
+                  this.place.address = data[0].address.address_name;
+                  this.place.extraAddress = "";
+                }
+              );
             });
 
             console.log("[coords2]", coords);
@@ -328,7 +344,11 @@ export default {
         this.geocoderInstance = new kakao.maps.services.Geocoder();
       }
       // 좌표로 행정동 주소 정보를 요청합니다
-      this.geocoderInstance.coord2Address(coords.getLng(), coords.getLat(), callback);
+      this.geocoderInstance.coord2Address(
+        coords.getLng(),
+        coords.getLat(),
+        callback
+      );
     },
 
     // 지도 좌측상단에 지도 중심좌표에 대한 주소정보를 표출하는 함수입니다
@@ -352,10 +372,18 @@ export default {
       !this.place.address && ((msg = "주소를 입력해주세요."), (err = false));
       err &&
         !this.place.name &&
-        ((msg = "핫플레이스 이름을 입력해주세요."), (err = false), this.$refs["name"].focus());
-      err && this.place.type == 0 && ((msg = "관광지 종류를 선택해주세요."), (err = false));
-      err && this.place.seasonType == 0 && ((msg = "계절을 선택해주세요."), (err = false));
-      err && !this.place.content && ((msg = "내용을 입력해주세요."), (err = false));
+        ((msg = "핫플레이스 이름을 입력해주세요."),
+        (err = false),
+        this.$refs["name"].focus());
+      err &&
+        this.place.type == 0 &&
+        ((msg = "관광지 종류를 선택해주세요."), (err = false));
+      err &&
+        this.place.season == 0 &&
+        ((msg = "계절을 선택해주세요."), (err = false));
+      err &&
+        !this.place.content &&
+        ((msg = "내용을 입력해주세요."), (err = false));
 
       if (!err) {
         alert(msg);
@@ -364,11 +392,15 @@ export default {
 
       writeHotPlace(this.place, ({ status }) => {
         let msg = "등록 처리시 문제가 발생했습니다.";
-        console.log(this.place);
+        console.log("api 전송시 place", this.place.fileList);
         if (status === 200) {
-          console.log("200");
-          console.log(msg);
+          if (this.place.fileList.length != 0) {
+            this.uploadFile();
+          }
+          msg = "등록이 완료되었습니다.";
         }
+        alert(msg);
+        this.moveList();
       });
     },
 
@@ -377,10 +409,15 @@ export default {
     },
 
     registerFile() {
-      let fileNameSlice = this.$refs.file.files[0].name.split(".");
+      let fileListSlice = this.$refs.file.files[0].name.split(".");
       console.log("[file]", this.$refs.file.files[0]);
-      this.photoKey = fileNameSlice[0] + "_" + new Date().getTime() + "." + fileNameSlice[1];
-      this.place.fileInfos.push(this.photoKey);
+      this.photoKey =
+        fileListSlice[0] + "_" + new Date().getTime() + "." + fileListSlice[1];
+      this.place.fileList.push(this.photoKey);
+    },
+
+    moveList() {
+      this.$router.push("/place");
     },
 
     uploadFile() {
@@ -420,7 +457,7 @@ export default {
 
     selected2: function () {
       console.log("변경!!");
-      this.place.seasonType = this.changeSeasonToType(this.selected2);
+      this.place.season = this.changeSeasonToType(this.selected2);
     },
 
     "place.address"() {
