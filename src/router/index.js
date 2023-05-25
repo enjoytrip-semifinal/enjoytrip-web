@@ -1,89 +1,91 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
-import TripHome from "@/views/TripHome.vue";
-import TripNotice from "@/views/TripNotice";
-import TripBoard from "@/views/TripBoard";
-import TripTour from "@/views/TripTour";
-import TripPlace from "@/views/TripPlace";
-import TripPlan from "@/views/TripPlan";
-import TripLogin from "@/views/TripLogin";
-import TripSignUp from "@/views/TripSignUp";
-import TripMyPage from "@/views/TripMyPage";
-import TripBoardList from "@/views/board/BoardList";
-import TripBoardWrite from "@/views/board/BoardWrite";
-import TripBoardListView from "@/views/board/BoardListView";
-import PlaceMain from "@/views/place/PlaceMain";
-import PlaceView from "@/views/place/PlaceView";
-import TripNoticeList from "@/views/notice/NoticeList";
-import TripNoticeWrite from "@/views/notice/NoticeWrite";
-import TripNoticeListView from "@/views/notice/NoticeListView";
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import TripHome from '@/views/TripHome.vue';
+import TripNotice from '@/views/TripNotice';
+import TripBoard from '@/views/TripBoard';
+import TripTour from '@/views/TripTour';
+import TripPlace from '@/views/TripPlace';
+import TripPlan from '@/views/TripPlan';
+import TripLogin from '@/views/TripLogin';
+import TripSignUp from '@/views/TripSignUp';
+import TripMyPage from '@/views/TripMyPage';
+import TripBoardList from '@/views/board/BoardList';
+import TripBoardWrite from '@/views/board/BoardWrite';
+import TripBoardListView from '@/views/board/BoardListView';
+import PlaceMain from '@/views/place/PlaceMain';
+import PlaceView from '@/views/place/PlaceView';
+import TripNoticeList from '@/views/notice/NoticeList';
+import TripNoticeWrite from '@/views/notice/NoticeWrite';
+import TripNoticeListView from '@/views/notice/NoticeListView';
 import MyPageMain from '@/views/mypage/MyPageMain';
 import MyPageReview from '@/views/mypage/MyPageReview';
 import MyPageEdit from '@/views/mypage/MyPageEdit';
-import TripBoardEdit from "@/views/board/BoardEdit"
+import TripBoardEdit from '@/views/board/BoardEdit';
+import PlanWrite from '@/views/plan/PlanWrite';
+import PlaceWrite from '@/views/place/PlaceWrite';
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/",
-    name: "home",
+    path: '/',
+    name: 'home',
     component: TripHome,
   },
   {
-    path: "/board",
-    name: "board",
+    path: '/board',
+    name: 'board',
     component: TripBoard,
-    redirect: "/board/list",
+    redirect: '/board/list',
     children: [
       {
-        path: "list",
-        name: "boardList",
+        path: 'list',
+        name: 'boardList',
         component: TripBoardList,
       },
       {
-        path: "list/:id",
-        name: "boardListView",
+        path: 'list/:id',
+        name: 'boardListView',
         component: TripBoardListView,
       },
       {
-        path: "write",
-        name: "boardWrite",
+        path: 'write',
+        name: 'boardWrite',
         component: TripBoardWrite,
       },
       {
-        path: "edit/:id",
-        name: "boardEdit",
+        path: 'edit/:id',
+        name: 'boardEdit',
         component: TripBoardEdit,
       },
     ],
   },
   {
-    path: "/notice",
-    name: "notice",
+    path: '/notice',
+    name: 'notice',
     component: TripNotice,
-    redirect: "notice/list",
+    redirect: 'notice/list',
     children: [
       {
-        path: "list",
-        name: "noticeList",
+        path: 'list',
+        name: 'noticeList',
         component: TripNoticeList,
       },
       {
-        path: "list/:id",
-        name: "noticeListView",
+        path: 'list/:id',
+        name: 'noticeListView',
         component: TripNoticeListView,
       },
       {
-        path: "write",
-        name: "noticeWrite",
+        path: 'write',
+        name: 'noticeWrite',
         component: TripNoticeWrite,
       },
     ],
   },
   {
-    path: "/tour",
-    name: "Tour",
+    path: '/tour',
+    name: 'Tour',
     component: TripTour,
   },
   {
@@ -91,30 +93,41 @@ const routes = [
     component: TripPlace,
     children: [
       {
-        path: "",
-        name: "placeHome",
+        path: '',
+        name: 'placeHome',
         component: PlaceMain,
       },
+      // {
+      //   path: ':id',
+      //   name: 'placeView',
+      //   component: PlaceView,
+      // },
       {
-        path: ":id",
-        name: "placeView",
-        component: PlaceView,
+        path: 'write',
+        name: 'placeWrite',
+        component: PlaceWrite,
       },
     ],
   },
   {
-    path: "/plan",
-    name: "plan",
+    path: '/plan',
     component: TripPlan,
+    children: [
+      {
+        path: 'write',
+        name: 'planWrite',
+        component: PlanWrite,
+      },
+    ],
   },
   {
-    path: "/login",
-    name: "login",
+    path: '/login',
+    name: 'login',
     component: TripLogin,
   },
   {
-    path: "/signup",
-    name: "signup",
+    path: '/signup',
+    name: 'signup',
     component: TripSignUp,
   },
   {
@@ -141,7 +154,7 @@ const routes = [
 ];
 
 const router = new VueRouter({
-  mode: "history",
+  mode: 'history',
   base: process.env.BASE_URL,
   scrollBehavior() {
     return { x: 0, y: 0 };

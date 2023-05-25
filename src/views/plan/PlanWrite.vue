@@ -1,14 +1,17 @@
 <template>
-  <div>상세보기...?</div>
+  <div>
+    <div>이거 뭐임?</div>
+    <!-- <div>{{ planList[0].title }}</div> -->
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'TripPlaceView',
+  name: 'TripPlanWrite',
   components: {},
   data() {
     return {
-      message: '',
+      planList: this.$route.params.planList,
     };
   },
   created() {},

@@ -84,7 +84,7 @@ export default {
   },
   methods: {
     onClickRegisterBtn() {
-      // this.$router.push('/place/write');
+      this.$router.push('/place/write');
     },
     loadHotPlace() {
       listHotPlace(
@@ -96,10 +96,10 @@ export default {
         (error) => {
           console.log(error);
         }
-      )
+      );
     },
   },
-}
+};
 </script>
 
 <style scoped lang="scss">

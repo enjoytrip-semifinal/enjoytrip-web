@@ -1,5 +1,5 @@
 <template>
-  <div class="plan-container">계획 세우기</div>
+  <router-view></router-view>
 </template>
 
 <script>

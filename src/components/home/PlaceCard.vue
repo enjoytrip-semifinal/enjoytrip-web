@@ -2,9 +2,9 @@
   <div class="card-box" :style="size">
     <img :src="this.imgUrl" alt="" />
     <div class="card-body" :style="size">
-      <div class="like"><img src="@/assets/images/ic-heart-empty.png"/></div>
+      <div class="like"><img src="@/assets/images/ic-heart-empty.png" /></div>
       <div class="like-hover">
-        <img src="@/assets/images/ic-heart-fill.png"/>
+        <img src="@/assets/images/ic-heart-fill.png" />
         <p class="like-num">112</p>
       </div>
       <div class="title" :class="[type === 's' ? 'small' : '']">제목</div>
@@ -64,7 +64,6 @@ export default {
   width: 424px;
   border-radius: 24px;
   cursor: pointer;
-
   img {
     transition-duration: 0.25s;
   }
@@ -104,12 +103,14 @@ export default {
       font-size: 28px;
       font-weight: 700;
       margin-top: 64px;
+      display: none;
     }
 
     .title.small {
       font-size: 18px;
       font-weight: 700;
       margin-top: 32px;
+      display: none;
     }
     .content {
       flex: 1;
@@ -118,6 +119,7 @@ export default {
       margin-top: 48px;
       margin-left: 44px;
       margin-right: 44px;
+      display: none;
     }
 
     .content.small {
@@ -126,6 +128,7 @@ export default {
       margin-top: 32px;
       margin-left: 20px;
       margin-right: 20px;
+      display: none;
     }
 
     .address {
@@ -134,6 +137,7 @@ export default {
       margin-bottom: 32px;
       margin-left: auto;
       margin-right: 32px;
+      display: none;
     }
     .address.small {
       font-size: 12px;
@@ -141,6 +145,7 @@ export default {
       margin-bottom: 20px;
       margin-left: auto;
       margin-right: 20px;
+      display: none;
     }
   }
 
@@ -166,8 +171,31 @@ export default {
       align-items: center;
       z-index: 100;
       img {
-      filter: none;
+        filter: none;
+      }
     }
+
+    .title {
+      display: flex;
+    }
+
+    .title.small {
+      display: flex;
+    }
+
+    .content {
+      display: flex;
+    }
+
+    .content.small {
+      display: flex;
+    }
+
+    .address {
+      display: flex;
+    }
+    .address.small {
+      display: flex;
     }
   }
 }
