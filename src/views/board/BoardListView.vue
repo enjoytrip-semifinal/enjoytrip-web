@@ -56,7 +56,7 @@
       >
         <div class="comment-header">
           <div class="comment-title-area">
-            <div class="name">{{ comment.user_id }}</div>
+            <div class="name">{{ comment.nickname }}</div>
             <div class="comment-time">{{ comment.register_date }}</div>
           </div>
           <div
@@ -150,7 +150,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(userStore, ["userInfo"]),
+    ...mapState(userStore, ["userInfo", "isLogin"]),
   },
   created() {
     this.loadView();
@@ -162,6 +162,10 @@ export default {
   },
   methods: {
     onClickComment() {
+      if (!this.isLogin) {
+        alert('로그인이 필요합니다!');
+        return;
+      }
       this.isInput = !this.isInput;
     },
     onClickCommentCalcel() {
@@ -193,7 +197,10 @@ export default {
           this.comment.board_id = data.board.board_id;
           this.targetComment.board_id = this.board.board_id;
           console.log(this.board);
-          this.isControll = Number(this.userInfo.user_id) === Number(this.board.user_id);
+          if (this.isLogin) {
+            this.isControll = Number(this.userInfo.user_id) === Number(this.board.user_id);
+          }
+          
           this.loadComment();
           this.getFileUrl();
         },

@@ -103,6 +103,16 @@ export default {
 </script>
 
 <style scoped lang="scss">
+/* IE */
+select::-ms-expand {
+  display: none;
+}
+.select {
+  -o-appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
 .place-container {
   display: flex;
   flex-direction: column;

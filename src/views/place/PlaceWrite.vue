@@ -371,6 +371,10 @@ export default {
       });
     },
 
+    onClickCancelBtn() {
+      this.$router.go(-1);
+    },
+
     registerFile() {
       let fileNameSlice = this.$refs.file.files[0].name.split(".");
       console.log("[file]", this.$refs.file.files[0]);
@@ -427,6 +431,16 @@ export default {
 </script>
 
 <style scoped lang="scss">
+/* IE */
+select::-ms-expand {
+  display: none;
+}
+.select {
+  -o-appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
 .write-root {
   min-height: calc(100vh - 100px);
   display: flex;

@@ -7,7 +7,7 @@
         <form class="input-form">
           <div class="title-area">
             <label for="title">제목</label>
-            <input type="text" id="title" placeholder="제목을 입력해주세요." />
+            <input type="text" id="title" placeholder="제목을 입력해주세요." v-model="plan.title"/>
           </div>
           <div class="content-area">
             <label for="title">내용</label>
@@ -15,6 +15,7 @@
               id="content"
               class="content-input"
               placeholder="여행 계획에 대한 설명을 50자 이내로 설명해주세요."
+              v-model="plan.content"
             />
           </div>
         </form>
@@ -38,13 +39,18 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import PlanCard from '../../components/plan/PlanCard.vue';
 
+const userStore = "userStore";
 let kakao = window.kakao;
 
 export default {
   name: 'TripPlanWrite',
   components: { PlanCard },
+  computed: {
+    ...mapState(userStore, ["userInfo", "isLogin"]),
+  },
   data() {
     return {
       mapInstance: null,
@@ -55,6 +61,20 @@ export default {
           lng: 126.570667,
         },
         level: 6,
+      },
+      plan: {
+        userId: 0,
+        title: '',
+        content: '',
+        startDate: '',
+        endDate: '',
+        ItineraryPlaces: {
+          placeName: '',
+          placeAddress: '',
+          placeComment: '',
+          placeType: 0,
+          imageName: '',
+        },
       },
       dots: [], // 선이 그려지고 있을때 클릭할 때마다 클릭 지점과 거리를 표시하는 커스텀 오버레이 배열입니다.
     };
