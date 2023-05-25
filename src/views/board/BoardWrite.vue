@@ -127,7 +127,7 @@ export default {
       this.photoKey =
         fileNameSlice[0] + '_' + new Date().getTime() + '.' + fileNameSlice[1];
       this.board.fileInfos.push(this.photoKey);
-      console.log(this.board.fileInfos);
+      console.log('[fileInfo]', this.board.fileInfos);
     },
     uploadFile() {
       AWS.config.update({

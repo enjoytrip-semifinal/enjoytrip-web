@@ -5,23 +5,16 @@
       <div class="like"><img src="@/assets/images/ic-heart-empty.png" /></div>
       <div class="like-hover">
         <img src="@/assets/images/ic-heart-fill.png" />
-        <p class="like-num">112</p>
+        <p class="like-num">{{ Math.floor(Math.random() * 101) }}</p>
       </div>
-      <div class="title" :class="[type === 's' ? 'small' : '']">제목</div>
+      <div class="title" :class="[type === 's' ? 'small' : '']">
+        {{ title ? title : '데우스 카페' }}
+      </div>
       <div class="content" :class="[type === 's' ? 'small' : '']">
-        {{
-          `여기 풍경 미쳤다...
-        여기 풍경 미쳤다...
-        여기 풍경 미쳤다...
-        여기 풍경 미쳤다...
-        여기 풍경 미쳤다...
-        여기 풍경 미쳤다...
-        여기 풍경 미쳤다...
-        여기 풍경 미쳤다...`
-        }}
+        {{ content }}
       </div>
       <div class="address" :class="[type === 's' ? 'small' : '']">
-        {{ `경북 구미시 3공단3로 302 ` }}
+        {{ address }}
       </div>
     </div>
   </div>
@@ -31,7 +24,7 @@
 export default {
   name: 'PlaceCard',
   components: {},
-  props: ['imgUrl', 'type'],
+  props: ['imgUrl', 'type', 'content', 'address', 'title'],
   data() {
     return {
       smallSize: {
@@ -62,10 +55,14 @@ export default {
   display: flex;
   height: 424px;
   width: 424px;
+  overflow: hidden;
   border-radius: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+
   cursor: pointer;
   img {
     transition-duration: 0.25s;
+    width: 100%;
   }
 
   .card-body {
@@ -78,6 +75,7 @@ export default {
     align-items: center;
     color: rgba($color: #ffffff, $alpha: 0);
     transition-duration: 0.25s;
+    border-radius: 24px;
 
     .like {
       position: absolute;
@@ -97,6 +95,10 @@ export default {
       img {
         height: 24px;
         width: 24px;
+      }
+      .like-num {
+        font-size: 14px;
+        font-weight: 700;
       }
     }
     .title {

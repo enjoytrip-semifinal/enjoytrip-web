@@ -28,7 +28,7 @@ async function idCheck(userid, success, fail) {
 }
 
 async function modfiyUser(user, success, fail) {
-  await securityApiInstance
+  await securityApi
     .put(`/user/modify`, JSON.stringify(user))
     .then(success)
     .catch(fail);

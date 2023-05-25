@@ -26,30 +26,15 @@
       </button>
     </div>
     <div class="place-content">
-      <PlaceCardVue :imgUrl="imgUrl[0]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[1]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[2]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[0]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[0]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[1]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[2]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[0]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[0]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[1]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[2]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[0]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[0]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[1]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[2]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[0]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[0]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[1]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[2]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[0]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[0]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[1]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[2]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[0]" :type="'s'" />
+      <div v-for="(place, index) in hotPlaces" :key="index">
+        <PlaceCardVue
+          :imgUrl="encode(place.image)"
+          :content="place.content"
+          :address="place.address"
+          :title="place.title"
+          :type="'s'"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -73,14 +58,36 @@ export default {
       },
       hotPlaces: [],
       imgUrl: [
-        require('@/assets/images/test1.png'),
-        require('@/assets/images/test2.png'),
-        require('@/assets/images/test3.png'),
+        require('@/assets/images/KakaoTalk_20230526_014027246.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_01.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_02.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_03.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_04.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_05.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_06.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_07.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_08.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_09.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_10.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_11.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_12.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_13.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_14.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_15.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_16.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_17.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_18.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_19.jpg'),
       ],
     };
   },
   created() {
     this.loadHotPlace();
+    this.param.pgno++;
+    this.loadHotPlace();
+    // this.param.pgno++;
+    // this.loadHotPlace();
+    // this.param.pgno++;
   },
   methods: {
     onClickRegisterBtn() {
@@ -90,6 +97,9 @@ export default {
       listHotPlace(
         this.param,
         ({ data }) => {
+          data.hotplaceList.forEach((place) => {
+            this.hotPlaces.push(place);
+          });
           console.log('[data]', data);
           this.articles = data.bordList;
         },
@@ -97,6 +107,10 @@ export default {
           console.log(error);
         }
       );
+    },
+
+    encode(url) {
+      return process.env.VUE_APP_S3_BASE_URL + encodeURI(url);
     },
   },
 };

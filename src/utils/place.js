@@ -1,4 +1,4 @@
-import { apiInstance, securityApiInstance } from "../utils/api.js";
+import { apiInstance, securityApiInstance } from '../utils/api.js';
 
 const api = apiInstance();
 const securityApi = securityApiInstance();
@@ -8,7 +8,10 @@ function listHotPlace(param, success, fail) {
 }
 
 function writeHotPlace(place, success, fail) {
-  securityApi.post(`/hotplace/write`).then(success).catch(fail);
+  securityApi
+    .post(`/hotplace/write`, JSON.stringify(place))
+    .then(success)
+    .catch(fail);
 }
 
 export { listHotPlace, writeHotPlace };
