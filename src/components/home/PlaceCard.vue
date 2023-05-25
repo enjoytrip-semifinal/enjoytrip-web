@@ -7,10 +7,14 @@
         <img src="@/assets/images/ic-heart-fill.png" />
         <p class="like-num">112</p>
       </div>
-      <div class="title" :class="[type === 's' ? 'small' : '']">제목</div>
+      <div class="title" :class="[type === 's' ? 'small' : '']">
+        {{ title ? title : '제목' }}
+      </div>
       <div class="content" :class="[type === 's' ? 'small' : '']">
         {{
-          `여기 풍경 미쳤다...
+          content
+            ? content
+            : `여기 풍경 미쳤다...
         여기 풍경 미쳤다...
         여기 풍경 미쳤다...
         여기 풍경 미쳤다...
@@ -29,18 +33,18 @@
 
 <script>
 export default {
-  name: "PlaceCard",
+  name: 'PlaceCard',
   components: {},
-  props: ["imgUrl", "type", "content", "address"],
+  props: ['imgUrl', 'type', 'content', 'address', 'title'],
   data() {
     return {
       smallSize: {
-        width: "294px",
-        height: "294px",
+        width: '294px',
+        height: '294px',
       },
       mediumSize: {
-        width: "424px",
-        height: "424px",
+        width: '424px',
+        height: '424px',
       },
     };
   },
@@ -48,7 +52,7 @@ export default {
   methods: {},
   computed: {
     size: function () {
-      if (this.type === "s") {
+      if (this.type === 's') {
         return this.smallSize;
       }
       return this.mediumSize;
@@ -62,10 +66,14 @@ export default {
   display: flex;
   height: 424px;
   width: 424px;
+  overflow: hidden;
+  border-radius: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 
   cursor: pointer;
   img {
     transition-duration: 0.25s;
+    width: 100%;
   }
 
   .card-body {

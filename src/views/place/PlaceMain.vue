@@ -26,7 +26,13 @@
       </button>
     </div>
     <div class="place-content">
-      <PlaceCardVue :imgUrl="imgUrl[0]" :type="'s'" />
+      <PlaceCardVue
+        :imgUrl="imgUrl[0]"
+        :content="'안녕하세요 서은진입니다'"
+        :address="'대구 북구'"
+        :title="'서은진 포도도감'"
+        :type="'s'"
+      />
       <PlaceCardVue :imgUrl="imgUrl[1]" :type="'s'" />
       <PlaceCardVue :imgUrl="imgUrl[2]" :type="'s'" />
       <PlaceCardVue :imgUrl="imgUrl[3]" :type="'s'" />
@@ -51,10 +57,10 @@
 </template>
 
 <script>
-import PlaceCardVue from "@/components/home/PlaceCard.vue";
-import { listHotPlace } from "@/utils/place";
+import PlaceCardVue from '@/components/home/PlaceCard.vue';
+import { listHotPlace } from '@/utils/place';
 export default {
-  name: "TripPlaceMain",
+  name: 'TripPlaceMain',
   components: {
     PlaceCardVue,
   },
@@ -62,48 +68,70 @@ export default {
     return {
       param: {
         pgno: 1,
-        sido: "",
-        gugun: "",
-        type: "",
-        season: "",
+        sido: '',
+        gugun: '',
+        type: '',
+        season: '',
       },
       hotPlaces: [],
       imgUrl: [
-        require("@/assets/images/KakaoTalk_20230526_014027246.jpg"),
-        require("@/assets/images/KakaoTalk_20230526_014027246_01.jpg"),
-        require("@/assets/images/KakaoTalk_20230526_014027246_02.jpg"),
-        require("@/assets/images/KakaoTalk_20230526_014027246_03.jpg"),
-        require("@/assets/images/KakaoTalk_20230526_014027246_04.jpg"),
-        require("@/assets/images/KakaoTalk_20230526_014027246_05.jpg"),
-        require("@/assets/images/KakaoTalk_20230526_014027246_06.jpg"),
-        require("@/assets/images/KakaoTalk_20230526_014027246_07.jpg"),
-        require("@/assets/images/KakaoTalk_20230526_014027246_08.jpg"),
-        require("@/assets/images/KakaoTalk_20230526_014027246_09.jpg"),
-        require("@/assets/images/KakaoTalk_20230526_014027246_10.jpg"),
-        require("@/assets/images/KakaoTalk_20230526_014027246_11.jpg"),
-        require("@/assets/images/KakaoTalk_20230526_014027246_12.jpg"),
-        require("@/assets/images/KakaoTalk_20230526_014027246_13.jpg"),
-        require("@/assets/images/KakaoTalk_20230526_014027246_14.jpg"),
-        require("@/assets/images/KakaoTalk_20230526_014027246_15.jpg"),
-        require("@/assets/images/KakaoTalk_20230526_014027246_16.jpg"),
-        require("@/assets/images/KakaoTalk_20230526_014027246_17.jpg"),
-        require("@/assets/images/KakaoTalk_20230526_014027246_18.jpg"),
-        require("@/assets/images/KakaoTalk_20230526_014027246_19.jpg"),
+        require('@/assets/images/KakaoTalk_20230526_014027246.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_01.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_02.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_03.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_04.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_05.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_06.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_07.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_08.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_09.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_10.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_11.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_12.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_13.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_14.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_15.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_16.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_17.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_18.jpg'),
+        require('@/assets/images/KakaoTalk_20230526_014027246_19.jpg'),
       ],
     };
   },
   created() {
     this.loadHotPlace();
+    this.param.pgno++;
+    this.loadHotPlace();
+    this.param.pgno++;
+    this.loadHotPlace();
+    this.param.pgno++;
+    this.loadHotPlace();
+    this.param.pgno++;
+    this.loadHotPlace();
+    this.param.pgno++;
+    this.loadHotPlace();
+    this.param.pgno++;
+    this.loadHotPlace();
+    this.param.pgno++;
+    this.loadHotPlace();
+    this.param.pgno++;
+    this.loadHotPlace();
+    this.param.pgno++;
+    this.loadHotPlace();
+    this.param.pgno++;
+    this.loadHotPlace();
+    this.param.pgno++;
+    this.loadHotPlace();
   },
   methods: {
     onClickRegisterBtn() {
-      this.$router.push("/place/write");
+      this.$router.push('/place/write');
     },
     loadHotPlace() {
       listHotPlace(
         this.param,
         ({ data }) => {
-          console.log("[data]", data);
+          console.log('[data]', data);
           this.articles = data.bordList;
         },
         (error) => {

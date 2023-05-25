@@ -1,4 +1,4 @@
-import { apiInstance, securityApiInstance } from "../utils/api.js";
+import { apiInstance, securityApiInstance } from '../utils/api.js';
 
 const api = apiInstance();
 const securityApi = securityApiInstance();
