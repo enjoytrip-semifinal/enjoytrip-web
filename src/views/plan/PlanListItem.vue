@@ -1,25 +1,24 @@
 <template>
   <div class="list-content">
-    <div class="body-no">{{ article.board_id }}</div>
-    <div class="body-title" @click="onClickArticle">{{ article.title }}</div>
-    <div class="body-writer">{{ article.nickname }}</div>
-    <div class="body-date">{{ elapsedTime(article.register_date) }}</div>
-    <div class="body-hit">{{ article.hit }}</div>
+    <div class="body-no">{{ plan.itineraryId }}</div>
+    <div class="body-title" @click="onClickArticle">{{ plan.title }}</div>
+    <div class="body-writer">{{ plan.nickname }}</div>
+    <div class="body-date">{{ elapsedTime(plan.registerDate) }}</div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'TripBoardListItem',
+  name: 'TripPlanListItem',
   components: {},
-  props: ['article'],
+  props: ['plan'],
   data() {
     return {};
   },
   created() {},
   methods: {
     onClickArticle() {
-      this.$router.push(`/board/list/${this.article['board_id']}`);
+      this.$router.push(`/plan/list/${this.plan['itineraryId']}`);
     },
     elapsedTime(date) {
       const start = new Date(date);

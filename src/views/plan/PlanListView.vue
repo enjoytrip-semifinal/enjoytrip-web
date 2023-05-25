@@ -1,6 +1,6 @@
 <template>
   <div class="plan-write-root">
-    <div><h2 class="title">여행 계획 작성</h2></div>
+    <div><h2 class="title">여행 계획</h2></div>
     <div class="content">
       <div class="map" id="map" ref="map"></div>
       <div class="input-area">
@@ -12,6 +12,7 @@
               id="title"
               placeholder="제목을 입력해주세요."
               v-model="plan.title"
+              readonly
             />
           </div>
           <div class="content-area">
@@ -21,6 +22,7 @@
               class="content-input"
               placeholder="여행 계획에 대한 설명을 50자 이내로 설명해주세요."
               v-model="plan.content"
+              readonly
             />
           </div>
           <div class="calendar-area">
@@ -40,7 +42,11 @@
     </div>
     <div class="plan-list">
       <div class="line"></div>
-      <div class="plan-item" v-for="(item, index) in planList" :key="index">
+      <div
+        class="plan-item"
+        v-for="(item, index) in plan.itineraryPlaces"
+        :key="index"
+      >
         <PlanCard :plan="item" :index="index" />
       </div>
     </div>
@@ -50,7 +56,7 @@
 <script>
 import { mapState } from 'vuex';
 import PlanCard from '../../components/plan/PlanCard.vue';
-import { writePlan } from '../../utils/plan';
+import { writePlan, getPlan } from '../../utils/plan';
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
 
@@ -68,7 +74,6 @@ export default {
       time3: null,
 
       mapInstance: null,
-      planList: JSON.parse(this.$route.params.planList),
       mapOption: {
         center: {
           lat: 33.450701,
@@ -88,17 +93,7 @@ export default {
     };
   },
   created() {
-    this.plan.userId = this.userInfo.user_id;
-
-    this.planList.forEach((plan) => {
-      this.plan.itineraryPlaces.push({
-        placeName: plan.title,
-        placeAddress: `${plan.addr1} ${plan.add2}`,
-        placeComment: '',
-        placeType: plan.contenttypeid,
-        imageName: plan.firstimage,
-      });
-    });
+    this.loadPlan();
   },
 
   mounted() {
@@ -115,10 +110,23 @@ export default {
   },
 
   methods: {
+    loadPlan() {
+      getPlan(
+        this.$route.fullPath.split('list/')[1],
+        ({ data }) => {
+          console.log(data);
+          this.plan = data;
+        },
+        () => {
+          console.log('불러오기 실패');
+        }
+      );
+    },
+
     drawLine() {
       let bounds = new kakao.maps.LatLngBounds();
 
-      const linePath = this.planList.map((plan) => {
+      const linePath = this.plan.itineraryPlaces.map((plan) => {
         console.log(plan);
         bounds.extend(new kakao.maps.LatLng(plan.mapy, plan.mapx));
         return new kakao.maps.LatLng(plan.mapy, plan.mapx);
@@ -127,7 +135,7 @@ export default {
 
       linePath.forEach((line, index) => {
         if (index === 0) {
-          this.planLine = new kakao.maps.Polyline({
+          this.plan.itineraryPlaces = new kakao.maps.Polyline({
             map: this.mapInstance, // 선을 표시할 지도입니다
             path: [line], // 선을 구성하는 좌표 배열입니다 클릭한 위치를 넣어줍니다
             strokeWeight: 3, // 선의 두께입니다
@@ -138,21 +146,21 @@ export default {
           this.displayCircleDot(line, 0);
         } else {
           // 그려지고 있는 선의 좌표 배열을 얻어옵니다
-          let path = this.planLine.getPath();
+          let path = this.plan.itineraryPlaces.getPath();
 
           // 좌표 배열에 클릭한 위치를 추가합니다
           path.push(line);
 
           // 다시 선에 좌표 배열을 설정하여 클릭 위치까지 선을 그리도록 설정합니다
-          this.planLine.setPath(path);
+          this.plan.itineraryPlaces.setPath(path);
 
-          let distance = Math.round(this.planLine.getLength());
+          let distance = Math.round(this.plan.itineraryPlaces.getLength());
           this.displayCircleDot(line, distance);
         }
       });
 
       // 마우스 클릭으로 그린 선의 좌표 배열을 얻어옵니다
-      var path = this.planLine.getPath();
+      var path = this.plan.itineraryPlaces.getPath();
       // 선을 구성하는 좌표의 개수가 2개 이상이면
       if (path.length > 1) {
         // 마지막 클릭 지점에 대한 거리 정보 커스텀 오버레이를 지웁니다
@@ -161,7 +169,7 @@ export default {
           this.dots[this.dots.length - 1].distance = null;
         }
 
-        var distance = Math.round(this.planLine.getLength()), // 선의 총 거리를 계산합니다
+        var distance = Math.round(this.plan.itineraryPlaces.getLength()), // 선의 총 거리를 계산합니다
           content = this.getTimeHTML(distance); // 커스텀오버레이에 추가될 내용입니다
 
         // 그려진 선의 거리정보를 지도에 표시합니다

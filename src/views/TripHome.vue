@@ -28,20 +28,20 @@
           <div>
             <img class="main-img" src="@/assets/images/review.png" alt="" />
           </div>
-          <p class="content-title">전국 관광지 조회</p>
+          <p class="content-title">리뷰</p>
           <p class="content-script">
-            전국에 있는 잘 알려진 관광지, 잘 알려지지 않은 관광지를 조회해보실
-            수 있습니다. 원하는 지역을 골라 편하게 관광지를 찾아보세요.
+            장소마다 리뷰 기능을 제공합니다. 현재 사용자의 위치에서 가깝고
+            리뷰가 많은 장소를 추천해드립니다.
           </p>
         </div>
         <div class="content">
           <div>
             <img class="main-img" src="@/assets/images/smile.png" alt="" />
           </div>
-          <p class="content-title">전국 관광지 조회</p>
+          <p class="content-title">완벽한 여행 계획</p>
           <p class="content-script">
-            전국에 있는 잘 알려진 관광지, 잘 알려지지 않은 관광지를 조회해보실
-            수 있습니다. 원하는 지역을 골라 편하게 관광지를 찾아보세요.
+            관광지와 맛집, 숙소 등을 한 번에 보고 빠르고 쉽게 여행 계획을 세우실
+            수 있습니다.
           </p>
         </div>
       </div>

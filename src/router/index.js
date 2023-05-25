@@ -23,6 +23,8 @@ import MyPageEdit from '@/views/mypage/MyPageEdit';
 import TripBoardEdit from '@/views/board/BoardEdit';
 import PlanWrite from '@/views/plan/PlanWrite';
 import PlaceWrite from '@/views/place/PlaceWrite';
+import PlanList from '@/views/plan/PlanList';
+import PlanListView from '@/views/plan/PlanListView';
 
 Vue.use(VueRouter);
 
@@ -112,11 +114,22 @@ const routes = [
   {
     path: '/plan',
     component: TripPlan,
+    redirect: '/plan/list',
     children: [
       {
         path: 'write',
         name: 'planWrite',
         component: PlanWrite,
+      },
+      {
+        path: 'list',
+        name: 'planList',
+        component: PlanList,
+      },
+      {
+        path: 'list/:id',
+        name: 'boardListView',
+        component: PlanListView,
       },
     ],
   },

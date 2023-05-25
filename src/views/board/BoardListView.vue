@@ -27,7 +27,6 @@
     <div class="comment-num">총 2개</div>
     <div v-if="!isInput" class="comment-input-area" @click="onClickComment">
       <img src="@/assets/images/comment.png" alt="" />
-      <img src="@/assets/images/camera.png" alt="" />
       <div>로그인하고 댓글 달기</div>
     </div>
     <div v-if="isInput" class="comment-input-area-active">
@@ -40,7 +39,6 @@
       <div class="comment-bottom">
         <div class="button-mode-area">
           <img src="@/assets/images/comment.png" alt="" />
-          <img src="@/assets/images/camera.png" alt="" />
         </div>
         <div class="button-submit-area">
           <a @click="onClickCommentCalcel" class="cancel-button">취소</a>
@@ -61,7 +59,10 @@
           </div>
           <div
             class="comment-controller-area"
-            v-if="comment.board_reply_id != targetComment.board_reply_id || !editMode"
+            v-if="
+              comment.board_reply_id != targetComment.board_reply_id ||
+              !editMode
+            "
           >
             <button @click="onClickCommentEditBtn(comment)">
               <span class="material-symbols-outlined"> edit </span>
@@ -72,7 +73,9 @@
           </div>
           <div
             class="comment-controller-area"
-            v-if="comment.board_reply_id == targetComment.board_reply_id && editMode"
+            v-if="
+              comment.board_reply_id == targetComment.board_reply_id && editMode
+            "
           >
             <button @click="onClickCommentDoneBtn(index)">
               <span class="material-symbols-outlined"> done </span>
@@ -84,14 +87,19 @@
         </div>
         <div class="comment-body">
           <div
-            v-if="comment.board_reply_id != targetComment.board_reply_id || !editMode"
+            v-if="
+              comment.board_reply_id != targetComment.board_reply_id ||
+              !editMode
+            "
             class="commment-content"
           >
             {{ comment.content }}
           </div>
           <input
             class="edit-input"
-            v-if="comment.board_reply_id == targetComment.board_reply_id && editMode"
+            v-if="
+              comment.board_reply_id == targetComment.board_reply_id && editMode
+            "
             v-model="targetComment.content"
           />
         </div>
@@ -116,13 +124,13 @@ import {
   writeComment,
   modifyComment,
   deleteComment,
-} from "../../utils/board";
-import { mapState } from "vuex";
+} from '../../utils/board';
+import { mapState } from 'vuex';
 
-const userStore = "userStore";
+const userStore = 'userStore';
 
 export default {
-  name: "TripBoardListView",
+  name: 'TripBoardListView',
   components: {},
   data() {
     return {
@@ -131,26 +139,26 @@ export default {
       comments: [],
       comment: {
         board_id: 0,
-        content: "",
+        content: '',
         user_id: 0,
       },
       isInput: false,
       isControll: false,
       commentParam: {
         pgno: 1,
-        id: "",
+        id: '',
       },
       targetComment: {
         board_id: 0,
         board_reply_id: 0,
-        content: "",
+        content: '',
         user_id: 0,
       },
       editMode: false,
     };
   },
   computed: {
-    ...mapState(userStore, ["userInfo", "isLogin"]),
+    ...mapState(userStore, ['userInfo', 'isLogin']),
   },
   created() {
     this.loadView();
@@ -175,12 +183,12 @@ export default {
       writeComment(
         this.comment,
         () => {
-          alert("댓글 등록!");
+          alert('댓글 등록!');
           this.isInput = false;
           this.loadComment();
         },
         () => {
-          alert("댓글 등록에 실패했습니다.");
+          alert('댓글 등록에 실패했습니다.');
         }
       );
     },
@@ -189,7 +197,7 @@ export default {
     },
     loadView() {
       viewBoard(
-        this.$route.fullPath.split("list/")[1],
+        this.$route.fullPath.split('list/')[1],
         ({ data }) => {
           this.board = data.board;
           this.files = data.files;
@@ -198,14 +206,15 @@ export default {
           this.targetComment.board_id = this.board.board_id;
           console.log(this.board);
           if (this.isLogin) {
-            this.isControll = Number(this.userInfo.user_id) === Number(this.board.user_id);
+            this.isControll =
+              Number(this.userInfo.user_id) === Number(this.board.user_id);
           }
-          
+
           this.loadComment();
           this.getFileUrl();
         },
         () => {
-          console.log("게시글 불러오기 실패");
+          console.log('게시글 불러오기 실패');
         }
       );
     },
@@ -213,11 +222,11 @@ export default {
       listComment(
         this.commentParam,
         ({ data }) => {
-          console.log("[commnet]", data.reviewList);
+          console.log('[commnet]', data.reviewList);
           this.comments = data.reviewList;
         },
         () => {
-          console.log("댓글 불러오기 실패!");
+          console.log('댓글 불러오기 실패!');
         }
       );
     },
@@ -228,11 +237,11 @@ export default {
       deleteBoard(
         this.board.board_id,
         () => {
-          alert("게시글이 삭제되었습니다.");
+          alert('게시글이 삭제되었습니다.');
           this.$router.go(-1);
         },
         () => {
-          alert("게시글 삭제에 실패했습니다.");
+          alert('게시글 삭제에 실패했습니다.');
           this.$router.go(-1);
         }
       );
@@ -249,11 +258,11 @@ export default {
         this.targetComment.board_reply_id,
         () => {
           console.log(this.targetComment);
-          alert("댓글이 삭제되었습니다.");
+          alert('댓글이 삭제되었습니다.');
           this.loadComment();
         },
         () => {
-          alert("댓글 삭제에 실패했습니다.");
+          alert('댓글 삭제에 실패했습니다.');
         }
       );
     },
@@ -269,7 +278,7 @@ export default {
           this.editMode = false;
         },
         () => {
-          alert("댓글 수정에 실패했습니다.");
+          alert('댓글 수정에 실패했습니다.');
         }
       );
     },
@@ -405,7 +414,7 @@ export default {
       resize: none;
       font-size: 14px;
       font-weight: 500;
-      font-family: "Noto Sans KR", sans-serif;
+      font-family: 'Noto Sans KR', sans-serif;
       border: none;
       margin-bottom: 56px;
       margin-top: 20px;

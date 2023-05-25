@@ -1,7 +1,6 @@
 import { apiInstance, securityApiInstance } from '@/utils/api';
 
 const api = apiInstance();
-const securityApi = securityApiInstance();
 
 async function signup(user, success, fail) {
   console.log('기다리는중...');
@@ -13,6 +12,8 @@ async function login(user, success, fail) {
 }
 
 async function findById(success, fail) {
+  api.defaults.headers['Authorization'] =
+    'Bearer ' + sessionStorage.getItem('access-token');
   await api.get(`/user/modify`).then(success).catch(fail);
 }
 
@@ -27,9 +28,10 @@ async function idCheck(userid, success, fail) {
 }
 
 async function modfiyUser(user, success, fail) {
-  await securityApi.put(`/user/modify`, JSON.stringify(user))
-  .then(success)
-  .catch(fail);
+  await securityApiInstance
+    .put(`/user/modify`, JSON.stringify(user))
+    .then(success)
+    .catch(fail);
 }
 
 export { signup, login, findById, logout, idCheck, modfiyUser };

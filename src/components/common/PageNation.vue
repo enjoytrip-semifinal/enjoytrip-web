@@ -16,10 +16,12 @@
 <script>
 import Paginate from 'vuejs-paginate';
 import { countBoard } from '../../utils/board';
+import { countPlan } from '../../utils/plan';
+
 export default {
   name: 'PageNation',
   components: { Paginate },
-  props: [],
+  props: ['type'],
   data() {
     return {
       selectPage: 1,
@@ -27,19 +29,31 @@ export default {
     };
   },
   created() {
-    countBoard(
-      ({ data }) => {
-        this.pageCount = data / 10;
-      },
-      () => {
-        console.log('페이지 불러오기 실패');
-      }
-    );
+    if (this.type === 'plan') {
+      countPlan(
+        ({ data }) => {
+          this.pageCount = data / 10;
+        },
+        () => {
+          console.log('페이지 불러오기 실패');
+        }
+      );
+    } else {
+      countBoard(
+        ({ data }) => {
+          this.pageCount = data / 10;
+        },
+        () => {
+          console.log('페이지 불러오기 실패');
+        }
+      );
+    }
+
     console.log(this.totalPageNum);
   },
   methods: {
     changePage: function (pageNum) {
-      this.$emit('pageFromChild', pageNum)
+      this.$emit('pageFromChild', pageNum);
       this.selectPage = pageNum;
       console.log(pageNum);
     },

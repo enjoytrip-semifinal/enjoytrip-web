@@ -1,7 +1,7 @@
 import { apiInstance, securityApiInstance } from './api';
 
 const api = apiInstance();
-const security = securityApiInstance();
+const securityApi = securityApiInstance();
 
 // ex) /board/list?pgno=1&key=sdad&word=13
 function listBoard(param, success, fail) {
@@ -9,7 +9,10 @@ function listBoard(param, success, fail) {
 }
 
 function writeBoard(board, success, fail) {
-  security.post(`/board/write`, JSON.stringify(board)).then(success).catch(fail);
+  securityApi
+    .post(`/board/write`, JSON.stringify(board))
+    .then(success)
+    .catch(fail);
 }
 
 function getBoard(boardid, success, fail) {
@@ -17,14 +20,14 @@ function getBoard(boardid, success, fail) {
 }
 
 function modifyBoard(board, success, fail) {
-  security
+  securityApi
     .put(`/board/modify/${board.boardid}`, JSON.stringify(board))
     .then(success)
     .catch(fail);
 }
 
 function deleteBoard(boardid, success, fail) {
-  security.delete(`/board/delete/${boardid}`).then(success).catch(fail);
+  securityApi.delete(`/board/delete/${boardid}`).then(success).catch(fail);
 }
 
 function countBoard(success, fail) {
@@ -41,18 +44,39 @@ function listComment(param, success, fail) {
 }
 
 function writeComment(comment, success, fail) {
-  security.post(`/board/review/write`, JSON.stringify(comment)).then(success).catch(fail);
+  securityApi
+    .post(`/board/review/write`, JSON.stringify(comment))
+    .then(success)
+    .catch(fail);
 }
 
 function modifyComment(comment, success, fail) {
-  security
-    .put(`/board/review/modify/${comment.board_reply_id}`, JSON.stringify(comment))
+  securityApi
+    .put(
+      `/board/review/modify/${comment.board_reply_id}`,
+      JSON.stringify(comment)
+    )
     .then(success)
     .catch(fail);
 }
 
 function deleteComment(commentid, success, fail) {
-  security.delete(`/board/review/delete/${commentid}`).then(success).catch(fail);
+  securityApi
+    .delete(`/board/review/delete/${commentid}`)
+    .then(success)
+    .catch(fail);
 }
 
-export { listBoard, writeBoard, getBoard, modifyBoard, deleteBoard, countBoard, viewBoard, listComment, writeComment, modifyComment, deleteComment };
+export {
+  listBoard,
+  writeBoard,
+  getBoard,
+  modifyBoard,
+  deleteBoard,
+  countBoard,
+  viewBoard,
+  listComment,
+  writeComment,
+  modifyComment,
+  deleteComment,
+};

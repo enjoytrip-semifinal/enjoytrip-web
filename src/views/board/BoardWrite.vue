@@ -37,31 +37,35 @@
         />
       </div>
       <div class="button-section">
-        <button class="upload-button" @click.prevent="onClickSubmitBtn">등록</button>
-        <button class="cancel-button" @click.prevent="onClickCancelBtn">취소</button>
+        <button class="upload-button" @click.prevent="onClickSubmitBtn">
+          등록
+        </button>
+        <button class="cancel-button" @click.prevent="onClickCancelBtn">
+          취소
+        </button>
       </div>
     </form>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
-import AWS from "aws-sdk";
-import { writeBoard } from "../../utils/board";
+import { mapState } from 'vuex';
+import AWS from 'aws-sdk';
+import { writeBoard } from '../../utils/board';
 
-const userStore = "userStore";
+const userStore = 'userStore';
 
 export default {
-  name: "TripBoardWrite",
+  name: 'TripBoardWrite',
   components: {},
   computed: {
-    ...mapState(userStore, ["userInfo", "isLogin"]),
+    ...mapState(userStore, ['userInfo', 'isLogin']),
   },
   data() {
     return {
       board: {
-        title: "",
-        content: "",
+        title: '',
+        content: '',
         hit: 0,
         user_id: 0,
         fileInfos: [],
@@ -74,17 +78,21 @@ export default {
   },
   methods: {
     onClickCancelBtn() {
-      this.$router.push("/board/list");
+      this.$router.push('/board/list');
     },
 
     onClickSubmitBtn() {
       let err = true;
-      let msg = "";
+      let msg = '';
       !this.board.title &&
-        ((msg = "제목을 입력해주세요"), (err = false), this.$refs["write-title"].focus());
+        ((msg = '제목을 입력해주세요'),
+        (err = false),
+        this.$refs['write-title'].focus());
       err &&
         !this.board.content &&
-        ((msg = "내용을 입력해주세요"), (err = false), this.$refs["write-content"].focus());
+        ((msg = '내용을 입력해주세요'),
+        (err = false),
+        this.$refs['write-content'].focus());
 
       if (!err) {
         alert(msg);
@@ -94,12 +102,12 @@ export default {
       writeBoard(
         this.board,
         ({ status }) => {
-          let msg = "등록 처리시 문제가 발생했습니다.";
+          let msg = '등록 처리시 문제가 발생했습니다.';
           if (status === 200) {
             if (this.board.fileInfos.length != 0) {
               this.uploadFile();
             }
-            msg = "등록이 완료되었습니다.";
+            msg = '등록이 완료되었습니다.';
           }
           alert(msg);
           this.moveList();
@@ -111,12 +119,13 @@ export default {
     },
 
     moveList() {
-      this.$router.push("/board/list");
+      this.$router.push('/board/list');
     },
     registerFile() {
-      let fileNameSlice = this.$refs.file.files[0].name.split(".");
-      console.log("[file]", this.$refs.file.files[0]);
-      this.photoKey = fileNameSlice[0] + "_" + new Date().getTime() + "." + fileNameSlice[1];
+      let fileNameSlice = this.$refs.file.files[0].name.split('.');
+      console.log('[file]', this.$refs.file.files[0]);
+      this.photoKey =
+        fileNameSlice[0] + '_' + new Date().getTime() + '.' + fileNameSlice[1];
       this.board.fileInfos.push(this.photoKey);
       console.log(this.board.fileInfos);
     },
@@ -129,7 +138,7 @@ export default {
       });
 
       const s3 = new AWS.S3({
-        apiVersion: "2006-03-01",
+        apiVersion: '2006-03-01',
         params: {
           Bucket: process.env.VUE_APP_ALBUM_BUCKET_NAME,
         },
@@ -139,7 +148,7 @@ export default {
         {
           Key: this.photoKey,
           Body: this.$refs.file.files[0],
-          ACL: "public-read",
+          ACL: 'public-read',
         },
         (err) => {
           if (err) {
