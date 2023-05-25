@@ -28,10 +28,10 @@
                 />
               </div>
               <div class="type-area input-line">
-                <label for="name">장소 유형</label>
+                <label for="type">장소 유형</label>
                 <div class="selectBox">
                   <select
-                    name="search"
+                    name="type"
                     class="select"
                     :value="selected"
                     @change="setSelect($event)"
@@ -40,10 +40,59 @@
                       {{ item.name }}
                     </option>
                   </select>
-                  <span class="icoArrow"
+                <span class="icoArrow"
                     ><img src="@/assets/images/arrow-down.png" alt=""
                   /></span>
                 </div>
+              </div>
+
+              <div class="season-area input-line">
+                <label for="season">계절</label>
+                <div class="selectBox">
+                  <select
+                    name="season"
+                    class="select"
+                    :value="selected2"
+                    @change="setSelectSeason($event)"
+                  >
+                    <option v-for="item in selectList2" :key="item.value">
+                      {{ item.name }}
+                    </option>
+                  </select>
+                <span class="icoArrow"
+                    ><img src="@/assets/images/arrow-down.png" alt=""
+                  /></span>
+                </div>
+              </div>
+
+              <div class="file-section input-line">
+                <div class="file-top">
+                  <label class="file-label" for="write-file">파일 첨부</label>
+                  <div class="file-button-area">
+                    <button @click.prevent="">파일 업로드</button>
+                    <button @click.prevent="">전체 삭제</button>
+                  </div>
+                </div>
+                <input
+                  id="write-file"
+                  class="file-input"
+                  placeholder="첨부된 파일이 없습니다."
+                  readonly
+                />
+              </div>
+
+              <div class="content-area input-line">
+                <label for="content">내용</label>
+                <textarea v-model="place.content" id="content"
+                class="content-input"
+                  placeholder="장소에 대한 설명을 50자 이내로 설명해주세요."/>
+              </div>
+
+              <div class="button-section">
+                <button class="upload-button" @click.prevent="onClickSubmitBtn">등록</button>
+                <button class="cancel-button" @click.prevent="onClickCancelBtn">
+                  취소
+                </button>
               </div>
             </div>
           </form>
@@ -63,6 +112,8 @@ export default {
   data() {
     return {
       mapInstance: null,
+      geocoderInstance: null,
+      markerInstance: null,
       mapOption: {
         center: {
           lat: 33.450701,
@@ -73,10 +124,11 @@ export default {
       place: {
         name: '',
         type: 0,
-        nickname: '',
-        email: '',
+        seasonType: 0,
+        content: '',
         address: '',
         extraAddress: '',
+        fileInfos: [],
       },
       selectList: [
         { name: '유형을 선택해주세요.', value: '' },
@@ -89,10 +141,28 @@ export default {
         { name: '쇼핑', value: 38 },
         { name: '음식점', value: 39 },
       ],
+      selectList2: [
+        { name: '계절을 선택해주세요.', value: '' },
+        { name: '봄', value: 1 },
+        { name: '여름', value: 2 },
+        { name: '가을', value: 3 },
+        { name: '겨울', value: 4 },
+      ],
+      selectSeason: [
+        { name: '계절을 선택해주세요.', value: '' },
+        { name: '봄', value: 1 },
+        { name: '여름', value: 2 },
+        { name: '가을', value: 3 },
+        { name: '겨울', value: 4 },
+      ],
       selected: '유형을 선택해주세요.',
+      selected2: '계절을 선택해주세요.',
+      selectedSeason: '계절을 선택해주세요.',
     };
   },
-  created() {},
+
+  created() { },
+  
   mounted() {
     const container = this.$refs.map;
     kakao = kakao || window.kakao;
@@ -103,6 +173,7 @@ export default {
       level,
     });
   },
+
   methods: {
     // 다음 주소 api
     onPostcode() {
@@ -148,7 +219,13 @@ export default {
     setSelect(event) {
       // 변경 적용
       this.selected = event.target.value;
-      console.log(this.selected);
+      console.log(event.target.value);
+    },
+
+    setSelectSeason(event) {
+      // 변경 적용
+      this.selected2 = event.target.value;
+      console.log(this.selected2);
     },
 
     changeStringToType(code) {
@@ -178,11 +255,109 @@ export default {
       }
       return 0;
     },
+
+    changeSeasonToType(code) {
+      if (code === '봄') {
+        return 1;
+      }
+      if (code === '여름') {
+        return 2;
+      }
+      if (code === '가을') {
+        return 3;
+      }
+      if (code === '겨울') {
+        return 4;
+      }
+      return 0;
+    },
+
+    // 주소-좌표 변환 메서드
+    changeAddressToCoordinate() {
+
+      if (!this.geocoderInstance) {
+        this.geocoderInstance = new kakao.maps.services.Geocoder();
+      }
+
+      if (this.markerInstance) {
+        this.markerInstance.setMap(null);
+        this.markerInstance = null;
+      }
+
+      this.geocoderInstance.addressSearch(`${this.place.address} ${this.place.extraAddress}`, (result, status) => {
+
+        console.log('[현재 주소]', `${this.place.address} ${this.place.extraAddress}`);
+        console.log(result);
+
+      // 정상적으로 검색이 완료됐으면 
+      if (status === kakao.maps.services.Status.OK) {
+
+        let coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+        console.log('[coords]', coords);
+
+        // 결과값으로 받은 위치를 마커로 표시합니다
+        this.markerInstance = new kakao.maps.Marker({
+            map: this.mapInstance,
+            position: coords
+        });
+
+        this.markerInstance.setMap(this.mapInstance);
+        this.markerInstance.setDraggable(true); 
+
+        kakao.maps.event.addListener(this.markerInstance, 'dragend', () => {
+          // 마커 이동 종료 후 주소 반환
+          // 현재 마커 좌표로 주소를 검색해서 주소창에 표시합니다
+          this.searchAddrFromCoords(this.markerInstance.getPosition(), (data) => {
+            console.log(data[0].address.address_name);
+            this.place.address = data[0].address.address_name;
+            this.place.extraAddress = '';
+          });
+        });
+
+        console.log('[coords2]', coords);
+        // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+        this.mapInstance.setCenter(coords);
+      } 
+      });    
+    },
+
+    searchAddrFromCoords(coords, callback) {
+      if (!this.geocoderInstance) {
+        this.geocoderInstance = new kakao.maps.services.Geocoder();
+      }
+      // 좌표로 행정동 주소 정보를 요청합니다
+      this.geocoderInstance.coord2Address(coords.getLng(), coords.getLat(), callback);
+    },
+
+    // 지도 좌측상단에 지도 중심좌표에 대한 주소정보를 표출하는 함수입니다
+    displayCenterInfo(result, status) {
+      console.log('in');
+
+      if (status === kakao.maps.services.Status.OK) {
+        console.log('inisds');
+          for(let i = 0; i < result.length; i++) {
+              // 행정동의 region_type 값은 'H' 이므로
+                console.log('[주소]', result[i].address_name);
+                this.place.address = result[i].address_name;
+                this.place.extraAddress = '';
+                break;
+          }
+      }    
+    }
   },
 
   watch: {
     selected() {
       this.place.type = this.changeStringToType(this.selected);
+    },
+
+    selected2: function() {
+      console.log('변경!!');
+      this.place.seasonType = this.changeSeasonToType(this.selected2);
+    },
+
+    'place.address'() {
+      this.changeAddressToCoordinate();
     },
   },
 };
@@ -303,10 +478,69 @@ export default {
                 font-family: 'Noto Sans KR', sans-serif;
                 font-weight: 500;
               }
+
+              .content-input {
+        border-radius: 8px;
+        height: 120px;
+        font-size: 18px;
+        font-weight: 700;
+        padding: 10px;
+        resize: none;
+        border: 1px solid #bdbdbd;
+      }
+
+              .file-top {
+                display: flex;
+          gap: 8px;
+          align-items: center;
+          .file-button-area {
+                display: flex;
+                gap: 8px;
+                align-items: center;
+                margin-left: auto;
+                button {
+                  color: white;
+                  background-color: #8f8f8f;
+                  border-radius: 8px;
+                  font-size: 14px;
+                  font-weight: 600;
+                  text-align: center;
+                  padding: 4px 16px;
+                  cursor: pointer;
+                }
+              }
+              }
             }
           }
         }
       }
+
+      .button-section {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      margin-top: 16px;
+      gap: 16px;
+      button {
+        width: 100px;
+        height: 44px;
+        text-align: center;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 32px;
+      }
+      .upload-button {
+        background-color: #ff8080;
+        color: white;
+      }
+
+      .cancel-button {
+        background-color: #707070;
+        color: white;
+      }
+    }
     }
   }
 }

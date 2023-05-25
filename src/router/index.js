@@ -13,7 +13,7 @@ import TripBoardList from '@/views/board/BoardList';
 import TripBoardWrite from '@/views/board/BoardWrite';
 import TripBoardListView from '@/views/board/BoardListView';
 import PlaceMain from '@/views/place/PlaceMain';
-import PlaceView from '@/views/place/PlaceView';
+// import PlaceView from '@/views/place/PlaceView';
 import TripNoticeList from '@/views/notice/NoticeList';
 import TripNoticeWrite from '@/views/notice/NoticeWrite';
 import TripNoticeListView from '@/views/notice/NoticeListView';

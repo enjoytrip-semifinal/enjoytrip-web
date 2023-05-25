@@ -1,6 +1,7 @@
-import { apiInstance } from './api';
+import { apiInstance, securityApiInstance } from './api';
 
 const api = apiInstance();
+const security = securityApiInstance();
 
 // ex) /board/list?pgno=1&key=sdad&word=13
 function listBoard(param, success, fail) {
@@ -8,7 +9,7 @@ function listBoard(param, success, fail) {
 }
 
 function writeBoard(board, success, fail) {
-  api.post(`/board/write`, JSON.stringify(board)).then(success).catch(fail);
+  security.post(`/board/write`, JSON.stringify(board)).then(success).catch(fail);
 }
 
 function getBoard(boardid, success, fail) {
@@ -16,14 +17,14 @@ function getBoard(boardid, success, fail) {
 }
 
 function modifyBoard(board, success, fail) {
-  api
+  security
     .put(`/board/modify/${board.boardid}`, JSON.stringify(board))
     .then(success)
     .catch(fail);
 }
 
 function deleteBoard(boardid, success, fail) {
-  api.delete(`/board/delete/${boardid}`).then(success).catch(fail);
+  security.delete(`/board/delete/${boardid}`).then(success).catch(fail);
 }
 
 function countBoard(success, fail) {
