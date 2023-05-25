@@ -359,6 +359,14 @@ export default {
         }
       }
     },
+
+    onClickCancelBtn() {
+      this.$router.go(-1);
+    },
+
+    onClickSubmitBtn() {
+
+    },
   },
 
   watch: {
@@ -379,6 +387,16 @@ export default {
 </script>
 
 <style scoped lang="scss">
+/* IE */
+select::-ms-expand {
+  display: none;
+}
+.select {
+  -o-appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
 .write-root {
   min-height: calc(100vh - 100px);
   display: flex;

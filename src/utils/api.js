@@ -15,10 +15,11 @@ function securityApiInstance() {
   const instance = axios.create({
     baseURL: process.env.VUE_APP_API_BASE_URL,
     headers: {
-      Authorization: "Bearer " + sessionStorage.getItem("access-token"),
       "Content-Type": "application/json;charset-utf-8",
     },
   });
+  instance.defaults.headers['Authorization'] =
+  'Bearer ' + sessionStorage.getItem('access-token');
   return instance;
 }
 

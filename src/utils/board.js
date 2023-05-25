@@ -41,18 +41,18 @@ function listComment(param, success, fail) {
 }
 
 function writeComment(comment, success, fail) {
-  api.post(`/board/review/write`, JSON.stringify(comment)).then(success).catch(fail);
+  security.post(`/board/review/write`, JSON.stringify(comment)).then(success).catch(fail);
 }
 
 function modifyComment(comment, success, fail) {
-  api
+  security
     .put(`/board/review/modify/${comment.board_reply_id}`, JSON.stringify(comment))
     .then(success)
     .catch(fail);
 }
 
 function deleteComment(commentid, success, fail) {
-  api.delete(`/board/review/delete/${commentid}`).then(success).catch(fail);
+  security.delete(`/board/review/delete/${commentid}`).then(success).catch(fail);
 }
 
 export { listBoard, writeBoard, getBoard, modifyBoard, deleteBoard, countBoard, viewBoard, listComment, writeComment, modifyComment, deleteComment };
