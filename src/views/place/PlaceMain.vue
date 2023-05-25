@@ -25,15 +25,15 @@
         핫플등록
       </button>
     </div>
-    <div class="place-content">
+    <div class="place-content" v-for="(place, index) in hotPlaces" :key="index">
       <PlaceCardVue
-        :imgUrl="imgUrl[0]"
-        :content="'안녕하세요 서은진입니다'"
-        :address="'대구 북구'"
-        :title="'서은진 포도도감'"
+        :imgUrl="encode(place.image)"
+        :content="place.content"
+        :address="place.address"
+        :title="place.title"
         :type="'s'"
       />
-      <PlaceCardVue :imgUrl="imgUrl[1]" :type="'s'" />
+      <!-- <PlaceCardVue :imgUrl="imgUrl[1]" :type="'s'" />
       <PlaceCardVue :imgUrl="imgUrl[2]" :type="'s'" />
       <PlaceCardVue :imgUrl="imgUrl[3]" :type="'s'" />
       <PlaceCardVue :imgUrl="imgUrl[4]" :type="'s'" />
@@ -51,7 +51,7 @@
       <PlaceCardVue :imgUrl="imgUrl[16]" :type="'s'" />
       <PlaceCardVue :imgUrl="imgUrl[17]" :type="'s'" />
       <PlaceCardVue :imgUrl="imgUrl[18]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[19]" :type="'s'" />
+      <PlaceCardVue :imgUrl="imgUrl[19]" :type="'s'" /> -->
     </div>
   </div>
 </template>
@@ -100,28 +100,11 @@ export default {
   },
   created() {
     this.loadHotPlace();
-    this.param.pgno++;
-    this.loadHotPlace();
-    this.param.pgno++;
-    this.loadHotPlace();
-    this.param.pgno++;
-    this.loadHotPlace();
-    this.param.pgno++;
-    this.loadHotPlace();
-    this.param.pgno++;
-    this.loadHotPlace();
-    this.param.pgno++;
-    this.loadHotPlace();
-    this.param.pgno++;
-    this.loadHotPlace();
-    this.param.pgno++;
-    this.loadHotPlace();
-    this.param.pgno++;
-    this.loadHotPlace();
-    this.param.pgno++;
-    this.loadHotPlace();
-    this.param.pgno++;
-    this.loadHotPlace();
+    // this.param.pgno++;
+    // this.loadHotPlace();
+    // this.param.pgno++;
+    // this.loadHotPlace();
+    // this.param.pgno++;
   },
   methods: {
     onClickRegisterBtn() {
@@ -131,6 +114,9 @@ export default {
       listHotPlace(
         this.param,
         ({ data }) => {
+          data.hotplaceList.forEach((place) => {
+            this.hotPlaces.push(place);
+          });
           console.log('[data]', data);
           this.articles = data.bordList;
         },
@@ -138,6 +124,10 @@ export default {
           console.log(error);
         }
       );
+    },
+
+    encode(url) {
+      return process.env.VUE_APP_S3_BASE_URL + encodeURI(url);
     },
   },
 };

@@ -8,24 +8,13 @@
         <p class="like-num">112</p>
       </div>
       <div class="title" :class="[type === 's' ? 'small' : '']">
-        {{ title ? title : '제목' }}
+        {{ title ? title : '데우스 카페' }}
       </div>
       <div class="content" :class="[type === 's' ? 'small' : '']">
-        {{
-          content
-            ? content
-            : `여기 풍경 미쳤다...
-        여기 풍경 미쳤다...
-        여기 풍경 미쳤다...
-        여기 풍경 미쳤다...
-        여기 풍경 미쳤다...
-        여기 풍경 미쳤다...
-        여기 풍경 미쳤다...
-        여기 풍경 미쳤다...`
-        }}
+        {{ content }}
       </div>
       <div class="address" :class="[type === 's' ? 'small' : '']">
-        {{ `경북 구미시 3공단3로 302 ` }}
+        {{ address }}
       </div>
     </div>
   </div>
