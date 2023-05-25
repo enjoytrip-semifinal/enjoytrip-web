@@ -9,8 +9,12 @@
       </div>
     </div>
     <div class="content">
-      <img :src="url" alt="" />
-      {{ notice.content }}
+      <div class="img-content">
+        <img :src="url" alt="" />
+      </div>
+      <div class="article-content">
+        {{ notice.content }}
+      </div>
     </div>
   </div>
 </template>
@@ -90,12 +94,29 @@ export default {
     }
   }
   .content {
+    display: flex;
+    flex-direction: column;
     margin-top: 20px;
     font-size: 16px;
     font-weight: 500;
     border-top: 1px solid rgb(181, 181, 181);
     padding-top: 60px;
     padding-bottom: 60px;
+  }
+
+  .img-content {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10%;
+
+    img {
+      max-width: 600px;
+      max-height: 600px;
+    }
+  }
+
+  .article-content {
+    display: flex;
   }
 }
 </style>

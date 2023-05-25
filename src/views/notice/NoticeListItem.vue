@@ -21,9 +21,7 @@ export default {
       fileList: [],
     };
   },
-  created() {
-    this.getFiles();
-  },
+  created() {},
   methods: {
     onClickArticle() {
       this.$router.push(`/notice/list/${this.article.noticeid}`);

@@ -26,46 +26,45 @@
       <div class="file-section">
         <div class="file-top">
           <label class="file-label" for="write-file">파일 첨부</label>
-          <div class="file-button-area">
-            <button @click.prevent="">파일 업로드</button>
-            <button @click.prevent="">전체 삭제</button>
-          </div>
         </div>
         <input
           id="write-file"
           class="file-input"
+          ref="file"
+          type="file"
           placeholder="첨부된 파일이 없습니다."
+          @change="registerFile"
         />
       </div>
       <div class="button-section">
         <button class="upload-button" @click.prevent="onClickSubmitBtn">등록</button>
-        <button class="cancel-button" @click.prevent="onClickCancelBtn">
-          취소
-        </button>
+        <button class="cancel-button" @click.prevent="onClickCancelBtn">취소</button>
       </div>
     </form>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import { writeBoard } from '../../utils/board';
+import { mapState } from "vuex";
+import AWS from "aws-sdk";
+import { writeBoard } from "../../utils/board";
 
-const userStore = 'userStore';
+const userStore = "userStore";
 
 export default {
-  name: 'TripBoardWrite',
+  name: "TripBoardWrite",
   components: {},
   computed: {
-    ...mapState(userStore, ['userInfo', 'isLogin']),
+    ...mapState(userStore, ["userInfo", "isLogin"]),
   },
   data() {
     return {
       board: {
-        title: '',
-        content: '',
+        title: "",
+        content: "",
         hit: 0,
         user_id: 0,
+        fileInfos: [],
       },
     };
   },
@@ -75,23 +74,31 @@ export default {
   },
   methods: {
     onClickCancelBtn() {
-      this.$router.push('/board/list');
+      this.$router.push("/board/list");
     },
 
     onClickSubmitBtn() {
       let err = true;
       let msg = "";
-      !this.board.title && ((msg = "제목을 입력해주세요"), (err = false), this.$refs['write-title'].focus());
-      err && !this.board.content && ((msg = "내용을 입력해주세요"), (err = false), this.$refs['write-content'].focus());
+      !this.board.title &&
+        ((msg = "제목을 입력해주세요"), (err = false), this.$refs["write-title"].focus());
+      err &&
+        !this.board.content &&
+        ((msg = "내용을 입력해주세요"), (err = false), this.$refs["write-content"].focus());
 
       if (!err) {
         alert(msg);
         return;
       }
-      writeBoard(this.board,
-      ({ status }) => {
+
+      writeBoard(
+        this.board,
+        ({ status }) => {
           let msg = "등록 처리시 문제가 발생했습니다.";
           if (status === 200) {
+            if (this.board.fileInfos.length != 0) {
+              this.uploadFile();
+            }
             msg = "등록이 완료되었습니다.";
           }
           alert(msg);
@@ -104,8 +111,43 @@ export default {
     },
 
     moveList() {
-      this.$router.push('/board/list');
-    }
+      this.$router.push("/board/list");
+    },
+    registerFile() {
+      let fileNameSlice = this.$refs.file.files[0].name.split(".");
+      console.log("[file]", this.$refs.file.files[0]);
+      this.photoKey = fileNameSlice[0] + "_" + new Date().getTime() + "." + fileNameSlice[1];
+      this.board.fileInfos.push(this.photoKey);
+      console.log(this.board.fileInfos);
+    },
+    uploadFile() {
+      AWS.config.update({
+        region: process.env.VUE_APP_BUCKET_REGION,
+        credentials: new AWS.CognitoIdentityCredentials({
+          IdentityPoolId: process.env.VUE_APP_IDENTITY_POLL_ID,
+        }),
+      });
+
+      const s3 = new AWS.S3({
+        apiVersion: "2006-03-01",
+        params: {
+          Bucket: process.env.VUE_APP_ALBUM_BUCKET_NAME,
+        },
+      });
+
+      s3.upload(
+        {
+          Key: this.photoKey,
+          Body: this.$refs.file.files[0],
+          ACL: "public-read",
+        },
+        (err) => {
+          if (err) {
+            return;
+          }
+        }
+      );
+    },
   },
 };
 </script>
@@ -140,8 +182,8 @@ export default {
       input:-webkit-autofill:hover,
       input:-webkit-autofill:focus,
       input:-webkit-autofill:active {
-      transition: background-color 5000s;
-      -webkit-text-fill-color: #fff !important;
+        transition: background-color 5000s;
+        -webkit-text-fill-color: #fff !important;
       }
     }
     label {
