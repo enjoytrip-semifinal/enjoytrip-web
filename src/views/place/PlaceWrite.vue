@@ -367,6 +367,7 @@ export default {
         console.log(this.place);
         if (status === 200) {
           console.log("200");
+          console.log(msg);
         }
       });
     },
@@ -379,8 +380,7 @@ export default {
       let fileNameSlice = this.$refs.file.files[0].name.split(".");
       console.log("[file]", this.$refs.file.files[0]);
       this.photoKey = fileNameSlice[0] + "_" + new Date().getTime() + "." + fileNameSlice[1];
-      this.article.fileInfos.push(this.photoKey);
-      console.log(this.article.fileInfos);
+      this.place.fileInfos.push(this.photoKey);
     },
 
     uploadFile() {
