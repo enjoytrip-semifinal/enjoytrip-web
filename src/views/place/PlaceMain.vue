@@ -25,33 +25,16 @@
         핫플등록
       </button>
     </div>
-    <div class="place-content" v-for="(place, index) in hotPlaces" :key="index">
-      <PlaceCardVue
-        :imgUrl="encode(place.image)"
-        :content="place.content"
-        :address="place.address"
-        :title="place.title"
-        :type="'s'"
-      />
-      <!-- <PlaceCardVue :imgUrl="imgUrl[1]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[2]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[3]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[4]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[5]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[6]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[7]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[8]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[9]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[10]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[11]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[12]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[13]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[14]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[15]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[16]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[17]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[18]" :type="'s'" />
-      <PlaceCardVue :imgUrl="imgUrl[19]" :type="'s'" /> -->
+    <div class="place-content">
+      <div v-for="(place, index) in hotPlaces" :key="index">
+        <PlaceCardVue
+          :imgUrl="encode(place.image)"
+          :content="place.content"
+          :address="place.address"
+          :title="place.title"
+          :type="'s'"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -100,8 +83,8 @@ export default {
   },
   created() {
     this.loadHotPlace();
-    // this.param.pgno++;
-    // this.loadHotPlace();
+    this.param.pgno++;
+    this.loadHotPlace();
     // this.param.pgno++;
     // this.loadHotPlace();
     // this.param.pgno++;

@@ -5,7 +5,7 @@
       <div class="like"><img src="@/assets/images/ic-heart-empty.png" /></div>
       <div class="like-hover">
         <img src="@/assets/images/ic-heart-fill.png" />
-        <p class="like-num">112</p>
+        <p class="like-num">{{ Math.floor(Math.random() * 101) }}</p>
       </div>
       <div class="title" :class="[type === 's' ? 'small' : '']">
         {{ title ? title : '데우스 카페' }}
@@ -95,6 +95,10 @@ export default {
       img {
         height: 24px;
         width: 24px;
+      }
+      .like-num {
+        font-size: 14px;
+        font-weight: 700;
       }
     }
     .title {
