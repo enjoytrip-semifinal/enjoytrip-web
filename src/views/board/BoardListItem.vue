@@ -10,47 +10,46 @@
 
 <script>
 export default {
-  name: 'TripBoardListItem',
+  name: "TripBoardListItem",
   components: {},
-  props: ['article'],
+  props: ["article"],
   data() {
     return {
-      message: '',
+      message: "",
     };
   },
   created() {},
   methods: {
     onClickArticle() {
-      this.$router.push(`/board/list/${this.article['board_id']}`);
+      this.$router.push(`/board/list/${this.article["board_id"]}`);
     },
     elapsedTime(date) {
-  const start = new Date(date);
-  const end = new Date(); // 현재 날짜
-  
-  const diff = (end - start) / 1000; // 경과 시간
- 
-  const times = [
-    { name: '시간', milliSeconds: 60 * 60 },
-    { name: '분', milliSeconds: 60 },
-  ];
-  
-  // 년 단위부터 알맞는 단위 찾기
-  for (const value of times) {
-    const betweenTime = Math.floor(diff / value.milliSeconds);
+      const start = new Date(date);
+      const end = new Date(); // 현재 날짜
 
-    if (betweenTime >= 24) {
-      return date.split(' ')[0];
-    }
-    // 큰 단위는 0보다 작은 소수 단위 나옴
-    if (betweenTime > 0) {
-      return `${betweenTime}${value.name} 전`;
-    }
-  }
-  // 모든 단위가 맞지 않을 시
-  return "방금 전";
-}
+      const diff = (end - start) / 1000; // 경과 시간
+
+      const times = [
+        { name: "시간", milliSeconds: 60 * 60 },
+        { name: "분", milliSeconds: 60 },
+      ];
+
+      // 년 단위부터 알맞는 단위 찾기
+      for (const value of times) {
+        const betweenTime = Math.floor(diff / value.milliSeconds);
+
+        if (betweenTime >= 24) {
+          return date.split(" ")[0];
+        }
+        // 큰 단위는 0보다 작은 소수 단위 나옴
+        if (betweenTime > 0) {
+          return `${betweenTime}${value.name} 전`;
+        }
+      }
+      // 모든 단위가 맞지 않을 시
+      return "방금 전";
+    },
   },
-  
 };
 </script>
 

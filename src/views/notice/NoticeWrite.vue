@@ -25,65 +25,78 @@
         <div class="file-top">
           <label class="file-label" for="write-file">파일 첨부</label>
           <div class="file-button-area">
-            <button @click.prevent="">파일 업로드</button>
-            <button @click.prevent="">전체 삭제</button>
+            <button ref="upload-button" @click.prevent="uploadFile">파일 업로드</button>
           </div>
         </div>
         <input
           id="write-file"
           class="file-input"
+          ref="file"
+          type="file"
           placeholder="첨부된 파일이 없습니다."
+          @change="registerFile"
         />
       </div>
       <div class="button-section">
         <button class="upload-button" @click.prevent="onClickSubmitBtn">등록</button>
-        <button class="cancel-button" @click.prevent="onClickCancelBtn">
-          취소
-        </button>
+        <button class="cancel-button" @click.prevent="onClickCancelBtn">취소</button>
       </div>
     </form>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import { writeArticle } from '@/utils/notice';
+import { mapState } from "vuex";
+import AWS from "aws-sdk";
+import { writeArticle } from "@/utils/notice";
 
-const userStore = 'userStore';
+const userStore = "userStore";
 
 export default {
-  name: 'TripNoticeWrite',
+  name: "TripNoticeWrite",
   components: {},
   data() {
     return {
       article: {
-        title: '',
-        content: '',
-        user_id: 0,
+        title: "",
+        content: "",
+        hit: 0,
+        adminid: 0,
+        fileInfos: [],
       },
     };
   },
   computed: {
-    ...mapState(userStore, ['userInfo', 'isLogin']),
+    ...mapState(userStore, ["userInfo", "isLogin"]),
   },
   created() {
-    this.article.user_id = this.userInfo.user_id;
+    this.article.adminid = this.userInfo.user_id;
   },
   methods: {
     onClickSubmitBtn() {
       let err = true;
       let msg = "";
-      !this.article.title && ((msg = "제목을 입력해주세요"), (err = false), this.$refs['write-title'].focus());
-      err && !this.article.content && ((msg = "내용을 입력해주세요"), (err = false), this.$refs['write-content'].focus());
+      !this.article.title &&
+        ((msg = "제목을 입력해주세요"), (err = false), this.$refs["write-title"].focus());
+      err &&
+        !this.article.content &&
+        ((msg = "내용을 입력해주세요"), (err = false), this.$refs["write-content"].focus());
 
       if (!err) {
         alert(msg);
         return;
       }
-      writeArticle(this.article,
-      ({ status }) => {
+
+      writeArticle(
+        this.article,
+        ({ status }) => {
           let msg = "등록 처리시 문제가 발생했습니다.";
+          console.log(this.article);
           if (status === 200) {
+            if (this.article.fileInfos.length != 0) {
+              this.uploadFile();
+            }
+
             msg = "등록이 완료되었습니다.";
           }
           alert(msg);
@@ -94,8 +107,46 @@ export default {
         }
       );
     },
+    registerFile() {
+      let fileNameSlice = this.$refs.file.files[0].name.split(".");
+      console.log("[file]", this.$refs.file.files[0]);
+      this.photoKey = fileNameSlice[0] + "_" + new Date().getTime() + "." + fileNameSlice[1];
+      this.article.fileInfos.push(this.photoKey);
+      console.log(this.article.fileInfos);
+    },
+    moveList() {
+      this.$router.push("/notice/list");
+    },
     onClickCancelBtn() {
-      this.$router.push('/notice/list');
+      this.$router.push("/notice/list");
+    },
+    uploadFile() {
+      AWS.config.update({
+        region: process.env.VUE_APP_BUCKET_REGION,
+        credentials: new AWS.CognitoIdentityCredentials({
+          IdentityPoolId: process.env.VUE_APP_IDENTITY_POLL_ID,
+        }),
+      });
+
+      const s3 = new AWS.S3({
+        apiVersion: "2006-03-01",
+        params: {
+          Bucket: process.env.VUE_APP_ALBUM_BUCKET_NAME,
+        },
+      });
+
+      s3.upload(
+        {
+          Key: this.photoKey,
+          Body: this.$refs.file.files[0],
+          ACL: "public-read",
+        },
+        (err) => {
+          if (err) {
+            return;
+          }
+        }
+      );
     },
   },
 };

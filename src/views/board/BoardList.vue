@@ -5,14 +5,12 @@
       <div class="search-line">
         <div class="selectBox">
           <select name="search" class="select" :value="selected" @change="setSelect($event)">
-            <option v-for="(item) in selectList" :key="item.value">{{ item.name }}</option>
+            <option v-for="item in selectList" :key="item.value">{{ item.name }}</option>
           </select>
-          <span class="icoArrow"
-            ><img src="@/assets/images/arrow-down.png" alt=""
-          /></span>
+          <span class="icoArrow"><img src="@/assets/images/arrow-down.png" alt="" /></span>
         </div>
         <div class="search-bar">
-          <input type="text" placeholder="검색어를 입력해주세요." v-model="searchInput"/>
+          <input type="text" placeholder="검색어를 입력해주세요." v-model="searchInput" />
           <span class="icoSearch" @click="onClickSearch"
             ><img src="@/assets/images/search.png" alt=""
           /></span>
@@ -29,21 +27,21 @@
         <div class="header-hit">조회수</div>
       </div>
       <div class="list-body" v-for="article in articles" :key="article['board_id']">
-        <BoardListItem :article="article"/>
+        <BoardListItem :article="article" />
       </div>
       <div class="board-pagination">
-        <PageNation @pageFromChild="pageChange"/>
+        <PageNation @pageFromChild="pageChange" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import BoardListItem from './BoardListItem.vue';
-import PageNation from '@/components/common/PageNation.vue';
-import { listBoard } from '../../utils/board';
+import BoardListItem from "./BoardListItem.vue";
+import PageNation from "@/components/common/PageNation.vue";
+import { listBoard } from "../../utils/board";
 export default {
-  name: 'TripBoardList',
+  name: "TripBoardList",
   components: {
     BoardListItem,
     PageNation,
@@ -58,11 +56,11 @@ export default {
       ],
       selected: "전체검색",
       articles: [],
-      searchInput: '',
+      searchInput: "",
       param: {
         pgno: 1,
-        key: '',
-        word: '',
+        key: "",
+        word: "",
       },
       totalPageNum: 0,
     };
@@ -73,18 +71,18 @@ export default {
   methods: {
     loadBoard() {
       listBoard(
-      this.param,
-      ({ data }) => {
-        console.log('[data]', data.boardList);
-        this.articles = data.boardList;
-      },
-      (error) => {
-        console.log(error);
-      }
-    )
+        this.param,
+        ({ data }) => {
+          console.log("[data]", data.boardList);
+          this.articles = data.boardList;
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     },
     onClickWriteBtn() {
-      this.$router.push('/board/write');
+      this.$router.push("/board/write");
     },
     pageChange(pgno) {
       this.param.pgno = pgno;
@@ -96,31 +94,31 @@ export default {
       console.log(this.selected);
     },
     onClickSearch() {
-      if (this.selected === '전체검색') {
+      if (this.selected === "전체검색") {
         this.param.word = this.searchInput;
-        this.param.key = '';
+        this.param.key = "";
         console.log(this.param.key);
         this.loadBoard();
         return;
       }
-      if (this.selected === '제목') {
+      if (this.selected === "제목") {
         console.log(this.selected);
         this.param.word = this.searchInput;
-        this.param.key = 'title';
+        this.param.key = "title";
         this.loadBoard();
         return;
       }
-      if (this.selected === '글쓴이') {
+      if (this.selected === "글쓴이") {
         console.log(this.selected);
         this.param.word = this.searchInput;
-        this.param.key = 'userId'
+        this.param.key = "userId";
         this.loadBoard();
         return;
       }
-      if (this.selected === '내용') {
+      if (this.selected === "내용") {
         console.log(this.selected);
         this.param.word = this.searchInput;
-        this.param.key = 'content'
+        this.param.key = "content";
         this.loadBoard();
         return;
       }

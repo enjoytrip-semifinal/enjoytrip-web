@@ -1,8 +1,8 @@
 <template>
   <div class="view-container">
-    <div class="title">{{board.title}}</div>
+    <div class="title">{{ board.title }}</div>
     <div class="title-data-section">
-      <div>{{`${board.nickname} | ${board.register_date}`}}</div>
+      <div>{{ `${board.nickname} | ${board.register_date}` }}</div>
       <div class="hit-area">
         <img src="@/assets/images/eyes.png" alt="" />
         <div>{{ board.hit }}</div>
@@ -10,9 +10,12 @@
       </div>
     </div>
     <div class="content">
-      {{
-        board.content
-      }}
+      <div class="img-content">
+        <img :src="url" alt="" />
+      </div>
+      <div class="article-content">
+        {{ board.content }}
+      </div>
     </div>
     <div class="comment">
       <p>댓글</p>
@@ -56,28 +59,41 @@
             <div class="name">{{ comment.user_id }}</div>
             <div class="comment-time">{{ comment.register_date }}</div>
           </div>
-          <div class="comment-controller-area" v-if="comment.board_reply_id != targetComment.board_reply_id || !editMode">
-            <button @click="onClickCommentEditBtn(comment)"><span class="material-symbols-outlined">
-edit
-</span></button>
-            <button @click="onClickCommentDeleteBtn(comment)"><span class="material-symbols-outlined">
-delete
-</span></button>
-
+          <div
+            class="comment-controller-area"
+            v-if="comment.board_reply_id != targetComment.board_reply_id || !editMode"
+          >
+            <button @click="onClickCommentEditBtn(comment)">
+              <span class="material-symbols-outlined"> edit </span>
+            </button>
+            <button @click="onClickCommentDeleteBtn(comment)">
+              <span class="material-symbols-outlined"> delete </span>
+            </button>
           </div>
-          <div class="comment-controller-area" v-if="comment.board_reply_id == targetComment.board_reply_id && editMode">
-            <button @click="onClickCommentDoneBtn(index)"><span class="material-symbols-outlined">
-done
-</span></button>
-            <button @click="onClickEditCancelBtn"><span class="material-symbols-outlined">
-close
-</span></button>
-
+          <div
+            class="comment-controller-area"
+            v-if="comment.board_reply_id == targetComment.board_reply_id && editMode"
+          >
+            <button @click="onClickCommentDoneBtn(index)">
+              <span class="material-symbols-outlined"> done </span>
+            </button>
+            <button @click="onClickEditCancelBtn">
+              <span class="material-symbols-outlined"> close </span>
+            </button>
           </div>
         </div>
         <div class="comment-body">
-          <div v-if="comment.board_reply_id != targetComment.board_reply_id || !editMode" class="commment-content">{{ comment.content }}</div>
-          <input class="edit-input" v-if="comment.board_reply_id == targetComment.board_reply_id && editMode"  v-model="targetComment.content" />
+          <div
+            v-if="comment.board_reply_id != targetComment.board_reply_id || !editMode"
+            class="commment-content"
+          >
+            {{ comment.content }}
+          </div>
+          <input
+            class="edit-input"
+            v-if="comment.board_reply_id == targetComment.board_reply_id && editMode"
+            v-model="targetComment.content"
+          />
         </div>
       </div>
     </div>
@@ -93,28 +109,36 @@ close
 </template>
 
 <script>
-import { viewBoard, deleteBoard, listComment, writeComment, modifyComment, deleteComment } from '../../utils/board';
-import { mapState } from 'vuex';
+import {
+  viewBoard,
+  deleteBoard,
+  listComment,
+  writeComment,
+  modifyComment,
+  deleteComment,
+} from "../../utils/board";
+import { mapState } from "vuex";
 
-const userStore = 'userStore';
+const userStore = "userStore";
 
 export default {
-  name: 'TripBoardListView',
+  name: "TripBoardListView",
   components: {},
   data() {
     return {
       board: {},
+      files: {},
       comments: [],
       comment: {
         board_id: 0,
         content: "",
-        user_id: 0
+        user_id: 0,
       },
-      isInput: false, 
+      isInput: false,
       isControll: false,
       commentParam: {
         pgno: 1,
-        id: '',
+        id: "",
       },
       targetComment: {
         board_id: 0,
@@ -126,8 +150,8 @@ export default {
     };
   },
   computed: {
-    ...mapState(userStore, ['userInfo']),
-  },  
+    ...mapState(userStore, ["userInfo"]),
+  },
   created() {
     this.loadView();
     this.comment.user_id = this.userInfo.user_id;
@@ -144,30 +168,37 @@ export default {
       this.isInput = false;
     },
     onClickCommentRegister() {
-      writeComment(this.comment, () => {
-        alert('댓글 등록!');
-        this.isInput = false;
-        this.loadComment();
-      }, () => {
-        alert('댓글 등록에 실패했습니다.')
-      })
+      writeComment(
+        this.comment,
+        () => {
+          alert("댓글 등록!");
+          this.isInput = false;
+          this.loadComment();
+        },
+        () => {
+          alert("댓글 등록에 실패했습니다.");
+        }
+      );
     },
     onClickListButton() {
       this.$router.go(-1);
     },
     loadView() {
-      viewBoard(this.$route.fullPath.split('list/')[1],
+      viewBoard(
+        this.$route.fullPath.split("list/")[1],
         ({ data }) => {
           this.board = data.board;
+          this.files = data.files;
           this.commentParam.id = data.board.board_id;
           this.comment.board_id = data.board.board_id;
           this.targetComment.board_id = this.board.board_id;
           console.log(this.board);
           this.isControll = Number(this.userInfo.user_id) === Number(this.board.user_id);
           this.loadComment();
+          this.getFileUrl();
         },
         () => {
-          console.log('게시글 불러오기 실패');
+          console.log("게시글 불러오기 실패");
         }
       );
     },
@@ -175,28 +206,29 @@ export default {
       listComment(
         this.commentParam,
         ({ data }) => {
-          console.log('[commnet]',data.reviewList
-);
-          this.comments = data.reviewList
-;
+          console.log("[commnet]", data.reviewList);
+          this.comments = data.reviewList;
         },
         () => {
-          console.log('댓글 불러오기 실패!');
+          console.log("댓글 불러오기 실패!");
         }
-      )
+      );
     },
     onClickEditBtn() {
       this.$router.push(`/board/edit/${this.board.board_id}`);
     },
     onClickDeleteBtn() {
-      deleteBoard(this.board.board_id, () => { 
-        alert('게시글이 삭제되었습니다.');
-        this.$router.go(-1);
-      },
+      deleteBoard(
+        this.board.board_id,
         () => {
-          alert('게시글 삭제에 실패했습니다.');
+          alert("게시글이 삭제되었습니다.");
           this.$router.go(-1);
-      });
+        },
+        () => {
+          alert("게시글 삭제에 실패했습니다.");
+          this.$router.go(-1);
+        }
+      );
     },
     onClickCommentEditBtn(comment) {
       this.targetComment.board_reply_id = comment.board_reply_id;
@@ -210,13 +242,13 @@ export default {
         this.targetComment.board_reply_id,
         () => {
           console.log(this.targetComment);
-          alert('댓글이 삭제되었습니다.');
+          alert("댓글이 삭제되었습니다.");
           this.loadComment();
         },
         () => {
-          alert('댓글 삭제에 실패했습니다.');
+          alert("댓글 삭제에 실패했습니다.");
         }
-      )
+      );
     },
     onClickCommentDoneBtn(index) {
       modifyComment(
@@ -230,14 +262,16 @@ export default {
           this.editMode = false;
         },
         () => {
-          alert('댓글 수정에 실패했습니다.');
+          alert("댓글 수정에 실패했습니다.");
         }
-      )
+      );
     },
-
+    getFileUrl() {
+      this.url = process.env.VUE_APP_S3_BASE_URL + encodeURI(this.files[0]);
+    },
     onClickEditCancelBtn() {
       this.editMode = false;
-    }
+    },
   },
 };
 </script>
@@ -284,6 +318,20 @@ export default {
     border-top: 1px solid rgb(181, 181, 181);
     padding-top: 60px;
     padding-bottom: 60px;
+  }
+  .img-content {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10%;
+
+    img {
+      max-width: 600px;
+      max-height: 600px;
+    }
+  }
+
+  .article-content {
+    display: flex;
   }
   .comment {
     display: flex;
@@ -350,7 +398,7 @@ export default {
       resize: none;
       font-size: 14px;
       font-weight: 500;
-      font-family: 'Noto Sans KR', sans-serif;
+      font-family: "Noto Sans KR", sans-serif;
       border: none;
       margin-bottom: 56px;
       margin-top: 20px;
@@ -429,7 +477,7 @@ export default {
         margin-bottom: 20px;
         font-size: 14px;
         font-weight: 400;
-        
+
         .edit-input {
           width: 100%;
           border: 1px solid #bbb;

@@ -4,16 +4,13 @@
     <div class="top-line">
       <div class="search-line">
         <div class="selectBox">
-          <select name="search" class="select">
-            <option value="all">전체검색</option>
-            <option value="title">제목</option>
-            <option value="writer">작성자</option>
-            <option value="content">내용</option>
+          <select name="search" class="select" :value="selected" @change="setSelect($event)">
+            <option v-for="item in selectList" :key="item.value">{{ item.name }}</option>
           </select>
           <span class="icoArrow"><img src="@/assets/images/arrow-down.png" alt="" /></span>
         </div>
         <div class="search-bar">
-          <input type="text" placeholder="검색어를 입력해주세요." />
+          <input type="text" placeholder="검색어를 입력해주세요." v-model="searchInput" />
           <span class="icoSearch"><img src="@/assets/images/search.png" alt="" /></span>
         </div>
       </div>
@@ -29,16 +26,11 @@
         <div class="header-date">작성일</div>
         <div class="header-hit">조회수</div>
       </div>
-      <div
-        class="list-body"
-        v-for="article in articles"
-        :key="article.noticeNo"
-        @click="viewArticle"
-      >
-        <noticeListItem :article="article" />
+      <div class="list-body" v-for="article in articles" :key="article.noticeNo">
+        <NoticeListItem :article="article" />
       </div>
       <div class="notice-pagination">
-        <PageNation />
+        <PageNation @pageFromChild="pageChange" />
       </div>
     </div>
   </div>
@@ -58,43 +50,85 @@ export default {
   },
   data() {
     return {
+      selectList: [
+        { name: "전체검색", value: "all" },
+        { name: "제목", value: "title" },
+        { name: "내용", value: "content" },
+      ],
+      selected: "전체검색",
       articles: [],
+      searchInput: "",
+      param: {
+        pgno: 1,
+        key: "",
+        word: "",
+      },
+      count: 1,
     };
   },
   created() {
-    let param = {
-      pgno: 1,
-      key: null,
-      word: null,
-    };
-
-    listArticle(
-      param,
-      ({ data }) => {
-        console.log(data);
-        this.articles = data;
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+    this.loadNotice();
   },
   computed: {
     ...mapState("userStore", ["userInfo"]),
     ...mapGetters(["checkUserInfo"]),
   },
   methods: {
+    loadNotice() {
+      listArticle(
+        this.param,
+        ({ data }) => {
+          console.log(data.noticeList);
+          this.articles = data.noticeList;
+          this.articles.noticeNo = this.count++;
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
     onClickWriteBtn() {
-      +this.$router.push("/notice/write");
+      this.$router.push("/notice/write");
     },
     getUserRole() {
       return this.user;
+    },
+    pageChange(pgno) {
+      this.param.pgno = pgno;
+      this.loadNotice();
+    },
+    setSelect(event) {
+      this.selected = event.target.value;
+      console.log(this.selected);
+    },
+    onClickSearch() {
+      if (this.selected === "전체검색") {
+        this.param.word = this.searchInput;
+        this.param.key = "";
+        console.log(this.param.key);
+        this.loadNotice();
+        return;
+      }
+      if (this.selected === "제목") {
+        console.log(this.selected);
+        this.param.word = this.searchInput;
+        this.param.key = "title";
+        this.loadNotice();
+        return;
+      }
+      if (this.selected === "내용") {
+        console.log(this.selected);
+        this.param.word = this.searchInput;
+        this.param.key = "content";
+        this.loadNotice();
+        return;
+      }
     },
   },
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 /* inputBox 스타일링 초기화 */
 /* IE */
 select::-ms-expand {
