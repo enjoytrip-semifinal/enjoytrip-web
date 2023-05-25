@@ -1,81 +1,57 @@
 <template>
   <div class="view-container">
-    <div class="title">제목 제목 제목 제목 제목</div>
+    <div class="title">{{ notice.title }}</div>
     <div class="title-data-section">
-      <div>이름 | 2023-05-02 09:52</div>
+      <div>관리자 | {{ notice.register_date }}</div>
       <div class="hit-area">
         <img src="@/assets/images/eyes.png" alt="" />
-        <div>167</div>
+        <div>{{ notice.hit }}</div>
       </div>
     </div>
     <div class="content">
-      {{
-        `ㅁㄴㅁㄴㅁㄴㅁㄴㅁㄴㅁㄴ므ㅏㅈㄷ아ㅡㅁ자이ㅡㅁ자이ㅡㅁ지ㅏ의마ㅡㅈ아ㅣ므나ㅣ으미ㅏ느이ㅏ즈이ㅏㅡㅂㅁ이ㅏㅡ바ㅣ으미ㅏㅡ아ㅣ즈이ㅏ믖이ㅏ므이ㅏㅡ미ㅏ느이ㅏ쥐ㅏㅇ뭉지ㅏㅜㅁㅈ아ㅣㅜㅁㅈ이ㅏㅜ미ㅏ움자ㅣ우ㅏㅣㅁ느이ㅏㅡ지아무ㅁㄴㅁㄴㅁㄴㅁㄴㅁㄴㅁㄴ므ㅏㅈㄷ아ㅡㅁ자이ㅡㅁ자이ㅡㅁ지ㅏ의마ㅡㅈ아ㅣ므나ㅣ으미ㅏ느이ㅏ즈이ㅏㅡㅂㅁ이ㅏㅡ바ㅣ으미ㅏㅡ아ㅣ즈이ㅏ믖이ㅏ므이ㅏㅡ미ㅏ느이ㅏ쥐ㅏㅇ뭉지ㅏㅜㅁㅈ아ㅣㅜㅁㅈ이ㅏㅜ미ㅏ움자ㅣ우ㅏㅣㅁ느이ㅏㅡ지아무ㅁㄴㅁㄴㅁㄴㅁㄴㅁㄴㅁㄴ므ㅏㅈㄷ아ㅡㅁ자이ㅡㅁ자이ㅡㅁ지ㅏ의마ㅡㅈ아ㅣ므나ㅣ으미ㅏ느이ㅏ즈이ㅏㅡㅂㅁ이ㅏㅡ바ㅣ으미ㅏㅡ아ㅣ즈이ㅏ믖이ㅏ므이ㅏㅡ미ㅏ느이ㅏ쥐ㅏㅇ뭉지ㅏㅜㅁㅈ아ㅣㅜㅁㅈ이ㅏㅜ미ㅏ움자ㅣ우ㅏㅣㅁ느이ㅏㅡ지아무ㅁㄴㅁㄴㅁㄴㅁㄴㅁㄴㅁㄴ므ㅏㅈㄷ아ㅡㅁ자이ㅡㅁ자이ㅡㅁ지ㅏ의마ㅡㅈ아ㅣ므나ㅣ으미ㅏ느이ㅏ즈이ㅏㅡㅂㅁ이ㅏㅡ바ㅣ으미ㅏㅡ아ㅣ즈이ㅏ믖이ㅏ므이ㅏㅡ미ㅏ느이ㅏ쥐ㅏㅇ뭉지ㅏㅜㅁㅈ아ㅣㅜㅁㅈ이ㅏㅜ미ㅏ움자ㅣ우ㅏㅣㅁ느이ㅏㅡ지아무ㅁㄴㅁㄴㅁㄴㅁㄴㅁㄴㅁㄴ므ㅏㅈㄷ아ㅡㅁ자이ㅡㅁ자이ㅡㅁ지ㅏ의마ㅡㅈ아ㅣ므나ㅣ으미ㅏ느이ㅏ즈이ㅏㅡㅂㅁ이ㅏㅡ바ㅣ으미ㅏㅡ아ㅣ즈이ㅏ믖이ㅏ므이ㅏㅡ미ㅏ느이ㅏ쥐ㅏㅇ뭉지ㅏㅜㅁㅈ아ㅣㅜㅁㅈ이ㅏㅜ미ㅏ움자ㅣ우ㅏㅣㅁ느이ㅏㅡ지아무ㅁㄴㅁㄴㅁㄴㅁㄴㅁㄴㅁㄴ므ㅏㅈㄷ아ㅡㅁ자이ㅡㅁ자이ㅡㅁ지ㅏ의마ㅡㅈ아ㅣ므나ㅣ으미ㅏ느이ㅏ즈이ㅏㅡㅂㅁ이ㅏㅡ바ㅣ으미ㅏㅡ아ㅣ즈이ㅏ믖이ㅏ므이ㅏㅡ미ㅏ느이ㅏ쥐ㅏㅇ뭉지ㅏㅜㅁㅈ아ㅣㅜㅁㅈ이ㅏㅜ미ㅏ움자ㅣ우ㅏㅣㅁ느이ㅏㅡ지아무ㅁㄴㅁㄴㅁㄴㅁㄴㅁㄴㅁㄴ므ㅏㅈㄷ아ㅡㅁ자이ㅡㅁ자이ㅡㅁ지ㅏ의마ㅡㅈ아ㅣ므나ㅣ으미ㅏ느이ㅏ즈이ㅏㅡㅂㅁ이ㅏㅡ바ㅣ으미ㅏㅡ아ㅣ즈이ㅏ믖이ㅏ므이ㅏㅡ미ㅏ느이ㅏ쥐ㅏㅇ뭉지ㅏㅜㅁㅈ아ㅣㅜㅁㅈ이ㅏㅜ미ㅏ움자ㅣ우ㅏㅣㅁ느이ㅏㅡ지아무ㅁㄴㅁㄴㅁㄴㅁㄴㅁㄴㅁㄴ므ㅏㅈㄷ아ㅡㅁ자이ㅡㅁ자이ㅡㅁ지ㅏ의마ㅡㅈ아ㅣ므나ㅣ으미ㅏ느이ㅏ즈이ㅏㅡㅂㅁ이ㅏㅡ바ㅣ으미ㅏㅡ아ㅣ즈이ㅏ믖이ㅏ므이ㅏㅡ미ㅏ느이ㅏ쥐ㅏㅇ뭉지ㅏㅜㅁㅈ아ㅣㅜㅁㅈ이ㅏㅜ미ㅏ움자ㅣ우ㅏㅣㅁ느이ㅏㅡ지아무ㅁㄴㅁㄴㅁㄴㅁㄴㅁㄴㅁㄴ므ㅏㅈㄷ아ㅡㅁ자이ㅡㅁ자이ㅡㅁ지ㅏ의마ㅡㅈ아ㅣ므나ㅣ으미ㅏ느이ㅏ즈이ㅏㅡㅂㅁ이ㅏㅡ바ㅣ으미ㅏㅡ아ㅣ즈이ㅏ믖이ㅏ므이ㅏㅡ미ㅏ느이ㅏ쥐ㅏㅇ뭉지ㅏㅜㅁㅈ아ㅣㅜㅁㅈ이ㅏㅜ미ㅏ움자ㅣ우ㅏㅣㅁ느이ㅏㅡ지아무ㅁㄴㅁㄴㅁㄴㅁㄴㅁㄴㅁㄴ므ㅏㅈㄷ아ㅡㅁ자이ㅡㅁ자이ㅡㅁ지ㅏ의마ㅡㅈ아ㅣ므나ㅣ으미ㅏ느이ㅏ즈이ㅏㅡㅂㅁ이ㅏㅡ바ㅣ으미ㅏㅡ아ㅣ즈이ㅏ믖이ㅏ므이ㅏㅡ미ㅏ느이ㅏ쥐ㅏㅇ뭉지ㅏㅜㅁㅈ아ㅣㅜㅁㅈ이ㅏㅜ미ㅏ움자ㅣ우ㅏㅣㅁ느이ㅏㅡ지아무ㅁㄴㅁㄴㅁㄴㅁㄴㅁㄴㅁㄴ므ㅏㅈㄷ아ㅡㅁ자이ㅡㅁ자이ㅡㅁ지ㅏ의마ㅡㅈ아ㅣ므나ㅣ으미ㅏ느이ㅏ즈이ㅏㅡㅂㅁ이ㅏㅡ바ㅣ으미ㅏㅡ아ㅣ즈이ㅏ믖이ㅏ므이ㅏㅡ미ㅏ느이ㅏ쥐ㅏㅇ뭉지ㅏㅜㅁㅈ아ㅣㅜㅁㅈ이ㅏㅜ미ㅏ움자ㅣ우ㅏㅣㅁ느이ㅏㅡ지아무ㅁㄴㅁㄴㅁㄴㅁㄴㅁㄴㅁㄴ므ㅏㅈㄷ아ㅡㅁ자이ㅡㅁ자이ㅡㅁ지ㅏ의마ㅡㅈ아ㅣ므나ㅣ으미ㅏ느이ㅏ즈이ㅏㅡㅂㅁ이ㅏㅡ바ㅣ으미ㅏㅡ아ㅣ즈이ㅏ믖이ㅏ므이ㅏㅡ미ㅏ느이ㅏ쥐ㅏㅇ뭉지ㅏㅜㅁㅈ아ㅣㅜㅁㅈ이ㅏㅜ미ㅏ움자ㅣ우ㅏㅣㅁ느이ㅏㅡ지아무ㅁㄴㅁㄴㅁㄴㅁㄴㅁㄴㅁㄴ므ㅏㅈㄷ아ㅡㅁ자이ㅡㅁ자이ㅡㅁ지ㅏ의마ㅡㅈ아ㅣ므나ㅣ으미ㅏ느이ㅏ즈이ㅏㅡㅂㅁ이ㅏㅡ바ㅣ으미ㅏㅡ아ㅣ즈이ㅏ믖이ㅏ므이ㅏㅡ미ㅏ느이ㅏ쥐ㅏㅇ뭉지ㅏㅜㅁㅈ아ㅣㅜㅁㅈ이ㅏㅜ미ㅏ움자ㅣ우ㅏㅣㅁ느이ㅏㅡ지아무`
-      }}
-    </div>
-    <div class="comment">댓글</div>
-    <div class="comment-content-area">
-      <div v-for="comment in comments" :key="comment.userid">
-        <div class="name">{{ comment.userid }}</div>
-        <div class="comment-body">
-          <div class="commment-content">{{ comment.content }}</div>
-          <div class="comment-time">{{ comment.time }}</div>
-        </div>
-      </div>
-    </div>
-    <div class="button-section">
-      <div class="prev-button">
-        <img src="@/assets/images/left-arrow.png" alt="" />
-      </div>
-      <div class="next-button">
-        <img src="@/assets/images/right-arrow.png" alt="" />
-      </div>
+      <img :src="url" alt="" />
+      {{ notice.content }}
     </div>
   </div>
 </template>
 
 <script>
+import { getArticle } from "../../utils/notice";
+
 export default {
-  name: 'TripBoardListView',
+  name: "TripNoticeListView",
   components: {},
   data() {
     return {
-      comments: [
-        {
-          userid: 'asdasdsad',
-          time: '2022-05-03',
-          content: '정말 최고다!',
-        },
-        {
-          userid: 'asdasdsad',
-          time: '2022-05-03',
-          content: '정말 최고다!',
-        },
-        {
-          userid: 'asdasdsad',
-          time: '2022-05-03',
-          content: '정말 최고다!',
-        },
-        {
-          userid: 'asdasdsad',
-          time: '2022-05-03',
-          content: '정말 최고다!',
-        },
-        {
-          userid: 'asdasdsad',
-          time: '2022-05-03',
-          content: '정말 최고다!',
-        },
-        {
-          userid: 'asdasdsad',
-          time: '2022-05-03',
-          content: '정말 최고다!',
-        },
-      ],
+      notice: {},
+      files: [],
+      url: "",
     };
   },
-  created() {},
-  methods: {},
+  created() {
+    this.loadView();
+  },
+  methods: {
+    loadView() {
+      getArticle(
+        this.$route.fullPath.split("list/")[1],
+        ({ data }) => {
+          this.notice = data.notice;
+          this.files = data.files;
+          console.log(this.notice);
+          this.getFileUrl();
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+    },
+    getFileUrl() {
+      console.log(this.files[0]);
+      this.url = process.env.VUE_APP_S3_BASE_URL + encodeURI(this.files[0]);
+      console.log(this.url);
+    },
+  },
 };
 </script>
 
@@ -88,6 +64,7 @@ export default {
   .title {
     font-size: 32px;
     font-weight: 700;
+    margin-top: 60px;
   }
   .title-data-section {
     display: flex;
@@ -96,16 +73,29 @@ export default {
     font-weight: 500;
     justify-content: space-between;
     align-items: center;
+    margin-top: 12px;
     .hit-area {
       display: flex;
       gap: 4px;
       align-items: center;
+      .list-button {
+        padding: 8px 16px;
+        background-color: #ff8080;
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 4px;
+        margin-left: 12px;
+      }
     }
   }
-
-  .button-section {
-    display: flex;
-    gap: 12px;
+  .content {
+    margin-top: 20px;
+    font-size: 16px;
+    font-weight: 500;
+    border-top: 1px solid rgb(181, 181, 181);
+    padding-top: 60px;
+    padding-bottom: 60px;
   }
 }
 </style>

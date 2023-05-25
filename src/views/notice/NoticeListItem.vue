@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     onClickArticle() {
-      this.$router.push(`/board/list/${this.article["board_id"]}`);
+      this.$router.push(`/notice/list/${this.article.noticeid}`);
     },
     elapsedTime(date) {
       const start = new Date(date);
@@ -54,7 +54,7 @@ export default {
       // 모든 단위가 맞지 않을 시
       return "방금 전";
     },
-    getFiles() {
+    downloadFiles() {
       AWS.config.update({
         region: process.env.VUE_APP_BUCKET_REGION,
         credentials: new AWS.CognitoIdentityCredentials({
@@ -66,21 +66,17 @@ export default {
         apiVersion: "2006-03-01",
         params: {
           Bucket: process.env.VUE_APP_ALBUM_BUCKET_NAME,
+          Key: this.fileList[0],
         },
       });
 
-      s3.listObjects(
-        {
-          Delimiter: "/",
-        },
-        (err, data) => {
-          if (err) {
-            return;
-          } else {
-            this.fileList = data.Contents;
-          }
+      s3.getObjects(s3.params, (err, data) => {
+        if (err) {
+          return;
+        } else {
+          this.fileList = data.Contents;
         }
-      );
+      });
     },
     getFileName() {
       //api로 업로드 된 file name 가져와서 fileList에 같은 것을 추려냄

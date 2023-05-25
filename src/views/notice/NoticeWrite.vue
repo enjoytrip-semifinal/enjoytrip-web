@@ -26,7 +26,6 @@
           <label class="file-label" for="write-file">파일 첨부</label>
           <div class="file-button-area">
             <button ref="upload-button" @click.prevent="uploadFile">파일 업로드</button>
-            <button @click.prevent="">전체 삭제</button>
           </div>
         </div>
         <input
@@ -35,6 +34,7 @@
           ref="file"
           type="file"
           placeholder="첨부된 파일이 없습니다."
+          @change="registerFile"
         />
       </div>
       <div class="button-section">
@@ -91,8 +91,12 @@ export default {
         this.article,
         ({ status }) => {
           let msg = "등록 처리시 문제가 발생했습니다.";
+          console.log(this.article);
           if (status === 200) {
-            this.uploadFile();
+            if (this.article.fileInfos.length != 0) {
+              this.uploadFile();
+            }
+
             msg = "등록이 완료되었습니다.";
           }
           alert(msg);
@@ -102,6 +106,13 @@ export default {
           console.log(error);
         }
       );
+    },
+    registerFile() {
+      let fileNameSlice = this.$refs.file.files[0].name.split(".");
+      console.log("[file]", this.$refs.file.files[0]);
+      this.photoKey = fileNameSlice[0] + "_" + new Date().getTime() + "." + fileNameSlice[1];
+      this.article.fileInfos.push(this.photoKey);
+      console.log(this.article.fileInfos);
     },
     moveList() {
       this.$router.push("/notice/list");
@@ -124,9 +135,6 @@ export default {
         },
       });
 
-      let fileNameSlice = this.$refs.file.files[0].name.split(".");
-      console.log("[file]", this.$refs.file.files[0]);
-      this.photoKey = fileNameSlice[0] + "_" + new Date().getTime() + "." + fileNameSlice[1];
       s3.upload(
         {
           Key: this.photoKey,
@@ -137,7 +145,6 @@ export default {
           if (err) {
             return;
           }
-          this.article.fileInfos.push(this.photoKey);
         }
       );
     },

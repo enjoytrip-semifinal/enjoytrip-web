@@ -11,15 +11,15 @@ function writeArticle(article, success, fail) {
 }
 
 function getArticle(articleno, success, fail) {
-  api.get(`/notice/${articleno}`).then(success).catch(fail);
+  api.get(`/notice/list/${articleno}`).then(success).catch(fail);
 }
 
-function modifyArticle(article, success, fail) {
-  api.put(`/notice`, JSON.stringify(article)).then(success).catch(fail);
+function modifyArticle(articleno, success, fail) {
+  api.put(`/notice/modify/${articleno}`).then(success).catch(fail);
 }
 
 function deleteArticle(articleno, success, fail) {
-  api.delete(`/notice/${articleno}`).then(success).catch(fail);
+  api.delete(`/notice/delete/${articleno}`).then(success).catch(fail);
 }
 
 export { listArticle, writeArticle, getArticle, modifyArticle, deleteArticle };
